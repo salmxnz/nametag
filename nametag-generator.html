@@ -299,12 +299,29 @@ body{
     print-color-adjust:exact!important;
     color-adjust:exact!important;
   }
-  @page{margin:0;size:90mm 130mm}
-  html,body{width:90mm;height:130mm;overflow:hidden;background:none!important;padding:0!important;margin:0!important;display:block!important;min-height:0}
+  /* 3mm bleed on all sides: trim 90×130mm → page 96×136mm */
+  @page{margin:0;size:96mm 136mm}
+  html,body{
+    width:96mm;height:136mm;
+    overflow:hidden;background:none!important;
+    padding:0!important;margin:0!important;
+    display:block!important;min-height:0;
+  }
   .controls{display:none!important}
   .overlay{display:none!important}
-  .stage{display:block!important;padding:0!important;margin:0!important;width:90mm!important;height:130mm!important}
-  .card{animation:none!important;transform:none!important;box-shadow:none!important;border-radius:0!important;width:90mm!important;height:130mm!important}
+  .stage{
+    display:block!important;padding:0!important;margin:0!important;
+    width:96mm!important;height:136mm!important;
+  }
+  /* card expands 3mm beyond trim on every side */
+  .card{
+    animation:none!important;transform:none!important;
+    box-shadow:none!important;border-radius:0!important;
+    width:96mm!important;height:136mm!important;
+    /* shift left+up 3mm so bleed bleeds equally on all sides */
+    position:relative!important;left:-3mm!important;top:-3mm!important;
+    background-size:cover!important;
+  }
 }
 </style>
 </head>
@@ -373,7 +390,7 @@ body{
     <img src="photos/CC-logo.webp"               class="fl" alt="Computer Club">
     <img src="photos/uilo-ai-upscaled-trans.png" class="fl" alt="UILO">
     <img src="photos/doppler-ai.webp"            class="fl" alt="Doppler AI">
-    <img src="photos/nexavenu-logo.png"          class="fl" alt="Nexavenu">
+    <img src="photos/uom-logo.png"               class="fl" style="height:36px;max-width:58px" alt="UoM">
   </div>
 
 </div>
