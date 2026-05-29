@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nametag Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#05050f;color:#e0e0ff;font-family:'Syne',sans-serif;min-height:100vh;padding:2rem 1.5rem 5rem}
+a{color:#a78bfa;text-decoration:none}
+
+h1{font-family:'Orbitron',monospace;font-size:18px;letter-spacing:4px;color:#a78bfa;margin-bottom:2rem}
+h2{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:4px;color:#4040aa;text-transform:uppercase;margin-bottom:1rem}
+
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1000px}
+@media(max-width:700px){.layout{grid-template-columns:1fr}}
+
+.panel{background:#0b0b1c;border:1px solid #1e1e36;border-radius:12px;padding:1.4rem}
+
+/* list rows */
+.row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;transition:background .15s}
+.row:hover{background:#12122a}
+.row-thumb{width:36px;height:36px;border-radius:6px;object-fit:cover;background:#1a1a3a;flex-shrink:0}
+.row-init{width:36px;height:36px;border-radius:6px;background:#1a1a3a;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:10px;color:#a78bfa;flex-shrink:0}
+.row-label{flex:1;font-size:13px}
+.row-sub{font-size:10px;color:#555;margin-top:1px}
+.row-actions{display:flex;gap:6px}
+
+/* buttons */
+.btn{padding:7px 16px;border:none;border-radius:6px;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;cursor:pointer;text-transform:uppercase;transition:opacity .15s}
+.btn:hover{opacity:.8}
+.btn-primary{background:linear-gradient(135deg,#c040f0,#6020b0);color:#fff}
+.btn-sm{padding:5px 10px;font-size:8px;letter-spacing:2px}
+.btn-ghost{background:#1a1a3a;color:#a78bfa}
+.btn-danger{background:#3a0a1a;color:#f06090}
+.add-row{display:flex;justify-content:flex-end;margin-bottom:1rem}
+
+/* modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#0d0d22;border:1px solid #2a2a50;border-radius:14px;padding:1.8rem;width:100%;max-width:400px}
+.modal h3{font-family:'Orbitron',monospace;font-size:12px;letter-spacing:3px;color:#a78bfa;margin-bottom:1.4rem}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
+.field label{font-size:9px;letter-spacing:4px;color:#404070;text-transform:uppercase}
+.field input,.field select{background:#060614;border:1px solid #1e1e36;color:#ccc;font-family:'Syne',sans-serif;font-size:13px;padding:9px 12px;border-radius:7px;outline:none;width:100%}
+.field input:focus,.field select:focus{border-color:#6020b0}
+.file-label{display:flex;align-items:center;gap:10px;cursor:pointer;background:#060614;border:1px solid #1e1e36;border-radius:7px;padding:9px 12px}
+.file-label span{font-size:12px;color:#555}
+.file-label input{display:none}
+.preview-thumb{width:48px;height:48px;border-radius:6px;object-fit:cover;display:none}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:1.4rem}
+.empty{font-size:11px;color:#2a2a50;padding:12px 10px}
+</style>
+</head>
+<body>
+
+<h1>&#9670; NAMETAG ADMIN</h1>
+<div style="margin-bottom:1.5rem;display:flex;gap:12px">
+  <a href="nametag-generator.html" class="btn btn-ghost btn-sm">&#8592; Nametag Preview</a>
+</div>
+
+<div class="layout">
+
+  <!-- TEAMS -->
+  <div class="panel">
+    <div class="add-row">
+      <h2 style="flex:1">Teams</h2>
+      <button class="btn btn-primary btn-sm" onclick="openTeamModal()">+ Add Team</button>
+    </div>
+    <div id="teamsList"></div>
+  </div>
+
+  <!-- PARTICIPANTS -->
+  <div class="panel">
+    <div class="add-row">
+      <h2 style="flex:1">Participants</h2>
+      <button class="btn btn-primary btn-sm" onclick="openParticipantModal()">+ Add Participant</button>
+    </div>
+    <div id="participantsList"></div>
+  </div>
+
+</div>
+
+<!-- TEAM MODAL -->
+<div class="overlay" id="teamOverlay">
+  <div class="modal">
+    <h3 id="teamModalTitle">Add Team</h3>
+    <div class="field">
+      <label>Team Name</label>
+      <input type="text" id="teamName" placeholder="e.g. Les Mordeurs">
+    </div>
+    <div class="field">
+      <label>Team Logo</label>
+      <label class="file-label">
+        <input type="file" id="teamLogo" accept="image/*" onchange="previewFile(this,'teamThumb')">
+        <img id="teamThumb" class="preview-thumb">
+        <span id="teamLogoLabel">Choose image…</span>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModals()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTeam()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARTICIPANT MODAL -->
+<div class="overlay" id="participantOverlay">
+  <div class="modal">
+    <h3 id="participantModalTitle">Add Participant</h3>
+    <div class="field">
+      <label>Full Name</label>
+      <input type="text" id="participantName" placeholder="e.g. Bhoovana Dinoo">
+    </div>
+    <div class="field">
+      <label>Team</label>
+      <select id="participantTeam"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModals()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveParticipant()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let db = { teams: [], participants: [] };
+let editingTeamId = null;
+let editingParticipantId = null;
+
+async function load() {
+  db = await fetch('/api/data').then(r => r.json());
+  renderTeams();
+  renderParticipants();
+}
+
+function initials(name) {
+  return name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function renderTeams() {
+  const el = document.getElementById('teamsList');
+  if (!db.teams.length) { el.innerHTML = '<div class="empty">No teams yet.</div>'; return; }
+  el.innerHTML = db.teams.map(t => `
+    <div class="row">
+      ${t.logo
+        ? `<img class="row-thumb" src="${t.logo}" onerror="this.style.display='none'">`
+        : `<div class="row-init">${initials(t.name)}</div>`}
+      <div class="row-label">
+        ${t.name}
+        <div class="row-sub">${db.participants.filter(p => p.teamId === t.id).length} members</div>
+      </div>
+      <div class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openTeamModal('${t.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteTeam('${t.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderParticipants() {
+  const el = document.getElementById('participantsList');
+  if (!db.participants.length) { el.innerHTML = '<div class="empty">No participants yet.</div>'; return; }
+  el.innerHTML = db.participants.map(p => {
+    const team = db.teams.find(t => t.id === p.teamId);
+    return `
+    <div class="row">
+      <div class="row-init">${initials(p.name)}</div>
+      <div class="row-label">
+        ${p.name}
+        <div class="row-sub">${team ? team.name : '—'}</div>
+      </div>
+      <div class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openParticipantModal('${p.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteParticipant('${p.id}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Team modal ──────────────────────────────────────
+function openTeamModal(id) {
+  editingTeamId = id || null;
+  const t = id ? db.teams.find(t => t.id === id) : null;
+  document.getElementById('teamModalTitle').textContent = t ? 'Edit Team' : 'Add Team';
+  document.getElementById('teamName').value = t ? t.name : '';
+  document.getElementById('teamLogo').value = '';
+  document.getElementById('teamLogoLabel').textContent = t?.logo ? 'Replace logo…' : 'Choose image…';
+  const thumb = document.getElementById('teamThumb');
+  if (t?.logo) { thumb.src = t.logo; thumb.style.display = 'block'; }
+  else thumb.style.display = 'none';
+  document.getElementById('teamOverlay').classList.add('open');
+}
+
+async function saveTeam() {
+  const name = document.getElementById('teamName').value.trim();
+  if (!name) return;
+  const fd = new FormData();
+  fd.append('name', name);
+  const file = document.getElementById('teamLogo').files[0];
+  if (file) fd.append('logo', file);
+
+  if (editingTeamId) {
+    await fetch(`/api/teams/${editingTeamId}`, { method: 'PUT', body: fd });
+  } else {
+    await fetch('/api/teams', { method: 'POST', body: fd });
+  }
+  closeModals();
+  load();
+}
+
+async function deleteTeam(id) {
+  const t = db.teams.find(t => t.id === id);
+  const members = db.participants.filter(p => p.teamId === id).length;
+  const msg = members ? `Delete "${t.name}"? This will also remove ${members} participant(s).` : `Delete "${t.name}"?`;
+  if (!confirm(msg)) return;
+  await fetch(`/api/teams/${id}`, { method: 'DELETE' });
+  load();
+}
+
+// ── Participant modal ───────────────────────────────
+function openParticipantModal(id) {
+  editingParticipantId = id || null;
+  const p = id ? db.participants.find(p => p.id === id) : null;
+  document.getElementById('participantModalTitle').textContent = p ? 'Edit Participant' : 'Add Participant';
+  document.getElementById('participantName').value = p ? p.name : '';
+
+  const sel = document.getElementById('participantTeam');
+  sel.innerHTML = db.teams.map(t => `<option value="${t.id}" ${p?.teamId === t.id ? 'selected' : ''}>${t.name}</option>`).join('');
+
+  document.getElementById('participantOverlay').classList.add('open');
+}
+
+async function saveParticipant() {
+  const name   = document.getElementById('participantName').value.trim();
+  const teamId = document.getElementById('participantTeam').value;
+  if (!name || !teamId) return;
+
+  const body = JSON.stringify({ name, teamId });
+  const hdrs = { 'Content-Type': 'application/json' };
+
+  if (editingParticipantId) {
+    await fetch(`/api/participants/${editingParticipantId}`, { method: 'PUT', body, headers: hdrs });
+  } else {
+    await fetch('/api/participants', { method: 'POST', body, headers: hdrs });
+  }
+  closeModals();
+  load();
+}
+
+async function deleteParticipant(id) {
+  if (!confirm('Remove this participant?')) return;
+  await fetch(`/api/participants/${id}`, { method: 'DELETE' });
+  load();
+}
+
+// ── Helpers ─────────────────────────────────────────
+function closeModals() {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+  editingTeamId = editingParticipantId = null;
+}
+
+function previewFile(input, thumbId) {
+  const thumb = document.getElementById(thumbId);
+  const label = document.getElementById('teamLogoLabel');
+  if (input.files[0]) {
+    thumb.src = URL.createObjectURL(input.files[0]);
+    thumb.style.display = 'block';
+    label.textContent = input.files[0].name;
+  }
+}
+
+document.querySelectorAll('.overlay').forEach(o =>
+  o.addEventListener('click', e => { if (e.target === o) closeModals(); })
+);
+
+load();
+</script>
+</body>
+</html>

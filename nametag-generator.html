@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agentforce Hackathon — Nametag Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;600;700&family=Rajdhani:wght@500;600;700&family=Syne:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── PAGE ─────────────────────────────────────── */
+body{
+  background:#05050f;
+  background-image:
+    radial-gradient(ellipse at 25% 15%,rgba(110,30,200,.18) 0%,transparent 55%),
+    radial-gradient(ellipse at 75% 85%,rgba(20,60,160,.13) 0%,transparent 50%);
+  color:#fff;
+  font-family:'Syne',sans-serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:2.5rem 1rem 5rem;
+  gap:2rem;
+}
+
+/* ── CONTROLS ─────────────────────────────────── */
+.controls{
+  width:100%;max-width:700px;
+  display:flex;flex-direction:column;gap:1.4rem;
+}
+.ctrl-group{display:flex;flex-direction:column;gap:.55rem}
+.ctrl-label{
+  font-family:'Orbitron',monospace;font-size:9px;
+  letter-spacing:5px;color:#303050;text-transform:uppercase;
+}
+.ctrl-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.nav{
+  width:34px;height:34px;border:1px solid #1e1e36;
+  background:transparent;color:#aaa;font-size:20px;
+  cursor:pointer;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.nav:hover{border-color:#555;color:#fff}
+.nsel{
+  flex:1;max-width:300px;padding:8px 14px;
+  background:#0b0b1c;border:1px solid #1e1e36;
+  color:#ccc;font-family:'Syne',sans-serif;
+  font-size:13px;border-radius:6px;cursor:pointer;
+  outline:none;appearance:none;
+}
+.pbtn{
+  padding:10px 28px;
+  background:linear-gradient(135deg,#c040f0,#6020b0);
+  border:none;color:#fff;font-family:'Orbitron',monospace;
+  font-size:9px;letter-spacing:4px;cursor:pointer;
+  border-radius:6px;text-transform:uppercase;
+  transition:opacity .2s,transform .1s;
+}
+.pbtn:hover{opacity:.85}
+.pbtn:active{transform:scale(.97)}
+
+/* icon buttons */
+.ibtn{
+  width:34px;height:34px;border-radius:6px;border:1px solid #2a1a4a;
+  background:#120820;color:#a78bfa;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.ibtn:hover{border-color:#6020b0;background:#1e0e38}
+
+/* teams strip */
+.teams-strip{
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.team-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 10px 5px 6px;border-radius:20px;
+  border:1px solid #2a1a4a;background:#0d0820;
+  font-size:11px;color:#ccc;cursor:pointer;
+  transition:border-color .15s;
+}
+.team-chip:hover{border-color:#6020b0}
+.team-chip img{width:20px;height:20px;border-radius:4px;object-fit:cover}
+.team-chip-init{
+  width:20px;height:20px;border-radius:4px;
+  background:#1e1040;display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:8px;color:#a78bfa;flex-shrink:0;
+}
+.add-team-chip{
+  padding:5px 12px;border-radius:20px;
+  border:1px dashed #2a1a4a;background:transparent;
+  font-size:11px;color:#555;cursor:pointer;
+  transition:all .15s;
+}
+.add-team-chip:hover{border-color:#a78bfa;color:#a78bfa}
+
+/* ── STAGE ────────────────────────────────────── */
+.stage{display:flex;justify-content:center;perspective:900px}
+
+/* ── CARD ─────────────────────────────────────── */
+.card{
+  width:340px;height:490px;border-radius:18px;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+  animation:float 5s ease-in-out infinite;
+  flex-shrink:0;
+  background:
+    linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 55%),
+    url('photos/bg.jpg') center/cover no-repeat;
+  border:1px solid rgba(130,120,248,.22);
+  box-shadow:0 40px 90px rgba(0,0,0,.85),0 0 60px rgba(100,80,230,.12);
+}
+@keyframes float{
+  0%,100%{transform:translateY(0) rotateX(0)}
+  50%{transform:translateY(-10px) rotateX(2deg)}
+}
+
+/* ── LANYARD HOLE ─────────────────────────────── */
+.lhole{
+  width:20px;height:10px;border-radius:10px;
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  z-index:20;border:2px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.7);
+}
+
+/* ── TOP STRIP ────────────────────────────────── */
+.ctop{
+  padding:56px 20px 0;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;position:relative;z-index:2;
+  background:transparent;
+}
+.nxlogo{height:14px;width:auto;filter:grayscale(1) brightness(6);opacity:.85}
+
+/* ── SPACER ───────────────────────────────────── */
+.cspacer{flex:1}
+
+/* ── TITLE ────────────────────────────────────── */
+.ctitle{
+  padding:0 16px 0;text-align:center;
+  flex-shrink:0;position:relative;z-index:2;
+}
+.tsf{
+  display:block;
+  font-family:'Arial Black','Arial Bold',Arial,sans-serif;
+  font-size:16px;font-weight:900;letter-spacing:.5px;
+  color:rgba(255,255,255,.9);
+  margin-bottom:4px;
+}
+.thack-img{
+  display:block;width:100%;max-width:238px;height:auto;margin:0 auto;
+}
+
+/* ── HACKERS + IDENTITY OVERLAY ──────────────── */
+.chackers{
+  position:relative;overflow:hidden;
+  height:190px;flex-shrink:0;
+}
+.himg{position:absolute;bottom:0;height:148px;width:auto;mix-blend-mode:screen;z-index:2}
+.hleft{left:-6px}
+.hright{right:-6px}
+.chackers::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 85% 60%,rgba(0,0,0,.55) 0%,transparent 60%),
+    radial-gradient(ellipse at 15% 60%,rgba(0,0,0,.35) 0%,transparent 50%);
+}
+.cident{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding-top:2px;gap:3px;z-index:10;
+}
+.pname{
+  font-family:'Rajdhani',sans-serif;font-weight:700;
+  font-size:28px;letter-spacing:3px;line-height:1;color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.7);
+  transition:font-size .15s;
+}
+.porg{
+  font-family:'Syne',sans-serif;font-size:7px;
+  font-weight:400;letter-spacing:5px;
+  text-transform:uppercase;
+  color:rgba(160,150,255,.8);
+  text-shadow:0 1px 6px rgba(0,0,0,.6);
+}
+.logo-ring{
+  width:96px;height:96px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+  background:rgba(130,120,248,.15);border:2px solid rgba(130,120,248,.5);
+  box-shadow:0 0 20px rgba(130,120,248,.3),inset 0 0 10px rgba(130,120,248,.1);
+  margin-top:4px;
+}
+.logo-img{width:100%;height:100%;object-fit:contain;padding:6px}
+.logo-photo{object-fit:cover;padding:0}
+.logo-init{
+  font-family:'Orbitron',monospace;
+  font-size:18px;font-weight:900;letter-spacing:1px;text-align:center;
+  color:#a78bfa;
+}
+
+/* ── FOOTER ───────────────────────────────────── */
+.cfooter{
+  height:75px;display:flex;align-items:center;
+  justify-content:space-evenly;gap:0;padding:0 10px;
+  flex-shrink:0;position:relative;z-index:2;
+  background:#fff;border-top:none;
+}
+.fl{height:30px;width:auto;max-width:48px;object-fit:contain}
+.fdk{mix-blend-mode:screen;filter:brightness(1.35);opacity:.9}
+.flt{mix-blend-mode:screen;filter:grayscale(1) invert(1) brightness(1.8);opacity:.9}
+.frg{filter:invert(1) brightness(1.4);opacity:.9}
+
+/* ── MODALS ───────────────────────────────────── */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.75);z-index:200;
+  align-items:center;justify-content:center;
+}
+.overlay.open{display:flex}
+.modal{
+  background:#0d0d22;border:1px solid #2a2a50;
+  border-radius:14px;padding:1.8rem;
+  width:100%;max-width:380px;
+  display:flex;flex-direction:column;gap:1rem;
+}
+.modal-title{
+  font-family:'Orbitron',monospace;font-size:11px;
+  letter-spacing:3px;color:#a78bfa;
+}
+.modal-section{
+  font-family:'Orbitron',monospace;font-size:8px;
+  letter-spacing:3px;color:#303060;text-transform:uppercase;
+  margin-top:.4rem;
+}
+.mfield{display:flex;flex-direction:column;gap:5px}
+.mfield label{font-size:9px;letter-spacing:4px;color:#404070;text-transform:uppercase}
+.mfield input,.mfield select{
+  background:#060614;border:1px solid #1e1e36;
+  color:#ccc;font-family:'Syne',sans-serif;font-size:13px;
+  padding:9px 12px;border-radius:7px;outline:none;width:100%;
+}
+.mfield input:focus,.mfield select:focus{border-color:#6020b0}
+.file-row{
+  display:flex;align-items:center;gap:10px;
+  background:#060614;border:1px solid #1e1e36;
+  border-radius:7px;padding:8px 12px;cursor:pointer;
+}
+.file-row input{display:none}
+.file-row span{font-size:12px;color:#555;flex:1}
+.file-thumb{width:36px;height:36px;border-radius:6px;object-fit:cover;display:none;flex-shrink:0}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:.4rem}
+.mbtn{
+  padding:8px 18px;border:none;border-radius:6px;
+  font-family:'Orbitron',monospace;font-size:8px;letter-spacing:3px;
+  cursor:pointer;text-transform:uppercase;transition:opacity .15s;
+}
+.mbtn:hover{opacity:.8}
+.mbtn-primary{background:linear-gradient(135deg,#c040f0,#6020b0);color:#fff}
+.mbtn-ghost{background:#1a1a3a;color:#a78bfa}
+.mbtn-danger{background:#3a0a1a;color:#f06090;margin-right:auto}
+
+/* team list inside modal */
+.team-list{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto}
+.trow{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 8px;border-radius:7px;
+  border:1px solid transparent;transition:border-color .15s;
+}
+.trow:hover{border-color:#2a1a4a}
+.trow-thumb{width:30px;height:30px;border-radius:5px;object-fit:cover;flex-shrink:0}
+.trow-init{
+  width:30px;height:30px;border-radius:5px;
+  background:#1a1040;display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:8px;color:#a78bfa;flex-shrink:0;
+}
+.trow-name{flex:1;font-size:12px;color:#ccc}
+.trow-sub{font-size:10px;color:#444}
+.trow-edit{
+  padding:4px 8px;border-radius:5px;border:1px solid #2a1a4a;
+  background:transparent;color:#a78bfa;font-size:10px;cursor:pointer;
+}
+.trow-del{
+  padding:4px 8px;border-radius:5px;border:1px solid #3a0a1a;
+  background:transparent;color:#f06090;font-size:10px;cursor:pointer;
+}
+.empty-state{font-size:11px;color:#2a2a50;padding:8px 0}
+
+/* ── PRINT ────────────────────────────────────── */
+@media print{
+  *,*::before,*::after{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+    color-adjust:exact!important;
+  }
+  @page{margin:0;size:90mm 130mm}
+  html,body{width:90mm;height:130mm;overflow:hidden;background:none!important;padding:0!important;margin:0!important;display:block!important;min-height:0}
+  .controls{display:none!important}
+  .overlay{display:none!important}
+  .stage{display:block!important;padding:0!important;margin:0!important;width:90mm!important;height:130mm!important}
+  .card{animation:none!important;transform:none!important;box-shadow:none!important;border-radius:0!important;width:90mm!important;height:130mm!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ CONTROLS ══════════════════════════════════════ -->
+<div class="controls">
+
+  <!-- Participant row -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">Participant</div>
+    <div class="ctrl-row">
+      <button class="nav" onclick="step(-1)">&#8249;</button>
+      <select class="nsel" id="nsel" onchange="goTo(+this.value)"></select>
+      <button class="nav" onclick="step(1)">&#8250;</button>
+      <button class="ibtn" title="Add participant" onclick="openParticipantModal()">+</button>
+      <button class="ibtn" title="Edit participant" onclick="openEditParticipantModal()" style="font-size:13px">&#9998;</button>
+      <button class="pbtn" onclick="window.print()">&#9658;&ensp;PRINT</button>
+    </div>
+  </div>
+
+  <!-- Teams row -->
+  <div class="ctrl-group">
+    <div class="ctrl-label">Teams</div>
+    <div class="teams-strip" id="teamsStrip">
+      <button class="add-team-chip" onclick="openTeamModal()">+ Add Team</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ NAMETAG ════════════════════════════════════════ -->
+<div class="stage">
+<div class="card" id="card">
+
+  <div class="lhole"></div>
+
+  <div class="ctop">
+    <img src="photos/nexavenu-logo.png" class="nxlogo" alt="Nexavenu">
+  </div>
+
+  <div class="cspacer"></div>
+
+  <div class="ctitle">
+    <span class="tsf">Agentforce</span>
+    <img src="photos/hackathon.png" class="thack-img" alt="HACKATHON">
+  </div>
+
+  <div style="flex:0.4"></div>
+
+  <div class="chackers">
+    <div class="cident">
+      <div class="pname" id="pname"></div>
+      <div class="porg"  id="porg"></div>
+      <div class="logo-ring" id="logoRing">
+        <span class="logo-init" id="logoInit"></span>
+      </div>
+    </div>
+    <img class="himg hleft"  src="photos/hacket-left.png" alt="">
+    <img class="himg hright" src="photos/hacker-right.png" alt="">
+  </div>
+
+  <div class="cfooter">
+    <img src="photos/su-logo-hovered.png"        class="fl" alt="SU">
+    <img src="photos/Emtel_Logo.png"             class="fl" alt="Emtel">
+    <img src="photos/CC-logo.webp"               class="fl" alt="Computer Club">
+    <img src="photos/uilo-ai-upscaled-trans.png" class="fl" alt="UILO">
+    <img src="photos/doppler-ai.webp"            class="fl" alt="Doppler AI">
+    <img src="photos/nexavenu-logo.png"          class="fl" alt="Nexavenu">
+  </div>
+
+</div>
+</div>
+
+<!-- ══ ADD / EDIT PARTICIPANT MODAL ══════════════════ -->
+<div class="overlay" id="participantOverlay">
+  <div class="modal">
+    <div class="modal-title" id="pModalTitle">Add Participant</div>
+    <div class="mfield">
+      <label>Full Name</label>
+      <input type="text" id="pName" placeholder="e.g. Bhoovana Dinoo">
+    </div>
+    <div class="mfield">
+      <label>Team</label>
+      <select id="pTeam"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="mbtn mbtn-danger" id="pDeleteBtn" style="display:none" onclick="deleteParticipant()">Delete</button>
+      <button class="mbtn mbtn-ghost" onclick="closeModals()">Cancel</button>
+      <button class="mbtn mbtn-primary" onclick="saveParticipant()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TEAM MODAL ════════════════════════════════════ -->
+<div class="overlay" id="teamOverlay">
+  <div class="modal">
+    <div class="modal-title">Teams</div>
+
+    <!-- Team list -->
+    <div class="team-list" id="teamListEl"></div>
+
+    <!-- Add / edit form -->
+    <div class="modal-section" id="teamFormTitle">New Team</div>
+    <div class="mfield">
+      <label>Team Name</label>
+      <input type="text" id="tName" placeholder="e.g. Les Mordeurs">
+    </div>
+    <div class="mfield">
+      <label>Logo</label>
+      <label class="file-row">
+        <input type="file" id="tLogo" accept="image/*" onchange="previewLogo()">
+        <img id="tThumb" class="file-thumb">
+        <span id="tLogoLabel">Choose image…</span>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="mbtn mbtn-ghost" id="tCancelEdit" style="display:none" onclick="cancelTeamEdit()">Cancel Edit</button>
+      <button class="mbtn mbtn-ghost" onclick="closeModals()">Close</button>
+      <button class="mbtn mbtn-primary" onclick="saveTeam()">Save Team</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────
+let db = { teams: [], participants: [] };
+let idx = 0;
+let editingTeamId = null;
+let editingParticipantId = null;
+
+// ── Helpers ────────────────────────────────────────────
+const initials = s => s.trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+const nameSize = n => {
+  if(n<=3)  return'36px';
+  if(n<=7)  return'31px';
+  if(n<=11) return'25px';
+  if(n<=15) return'21px';
+  return'17px';
+};
+
+// ── Load ───────────────────────────────────────────────
+async function load() {
+  db = await fetch('/api/data').then(r => r.json());
+  rebuildSelect();
+  renderTeamsStrip();
+  renderTeamList();
+  render();
+}
+
+// ── Nametag render ─────────────────────────────────────
+function render() {
+  const p = db.participants[idx];
+  if (!p) {
+    document.getElementById('pname').textContent = '—';
+    document.getElementById('porg').textContent = '';
+    document.getElementById('logoInit').textContent = '';
+    return;
+  }
+  const team = db.teams.find(t => t.id === p.teamId);
+
+  const nm = document.getElementById('pname');
+  nm.textContent = p.name;
+  nm.style.fontSize = nameSize(p.name.length);
+
+  document.getElementById('porg').textContent = team ? team.name : '';
+
+  const ring = document.getElementById('logoRing');
+  const init = document.getElementById('logoInit');
+  ring.querySelector('.logo-img')?.remove();
+
+  if (team?.logo) {
+    init.style.display = 'none';
+    const im = document.createElement('img');
+    im.src = team.logo;
+    im.className = 'logo-img logo-photo';
+    ring.appendChild(im);
+  } else {
+    init.style.display = '';
+    init.textContent = team ? initials(team.name) : '?';
+  }
+
+  document.getElementById('nsel').value = idx;
+}
+
+function rebuildSelect() {
+  const sel = document.getElementById('nsel');
+  sel.innerHTML = '';
+  if (!db.participants.length) {
+    const o = document.createElement('option');
+    o.textContent = 'No participants yet';
+    sel.appendChild(o);
+    return;
+  }
+  db.participants.forEach((p, i) => {
+    const team = db.teams.find(t => t.id === p.teamId);
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = (i+1) + '. ' + p.name + (team ? ' — ' + team.name : '');
+    sel.appendChild(o);
+  });
+}
+
+function step(d) { idx = (idx + d + Math.max(db.participants.length,1)) % Math.max(db.participants.length,1); render(); }
+function goTo(i) { idx = +i; render(); }
+
+// ── Teams strip (controls) ─────────────────────────────
+function renderTeamsStrip() {
+  const strip = document.getElementById('teamsStrip');
+  strip.innerHTML = '';
+  db.teams.forEach(t => {
+    const chip = document.createElement('button');
+    chip.className = 'team-chip';
+    chip.title = 'Edit ' + t.name;
+    chip.onclick = () => openTeamModal(t.id);
+    if (t.logo) {
+      chip.innerHTML = `<img src="${t.logo}" onerror="this.style.display='none'"><span>${t.name}</span>`;
+    } else {
+      chip.innerHTML = `<div class="team-chip-init">${initials(t.name)}</div><span>${t.name}</span>`;
+    }
+    strip.appendChild(chip);
+  });
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-team-chip';
+  addBtn.textContent = '+ Add Team';
+  addBtn.onclick = () => openTeamModal();
+  strip.appendChild(addBtn);
+}
+
+// ── Team list (inside modal) ───────────────────────────
+function renderTeamList() {
+  const el = document.getElementById('teamListEl');
+  if (!db.teams.length) {
+    el.innerHTML = '<div class="empty-state">No teams yet — add one below.</div>';
+    return;
+  }
+  el.innerHTML = db.teams.map(t => {
+    const count = db.participants.filter(p => p.teamId === t.id).length;
+    const thumb = t.logo
+      ? `<img class="trow-thumb" src="${t.logo}" onerror="this.style.display='none'">`
+      : `<div class="trow-init">${initials(t.name)}</div>`;
+    return `<div class="trow">
+      ${thumb}
+      <div class="trow-name">${t.name}<div class="trow-sub">${count} member${count!==1?'s':''}</div></div>
+      <button class="trow-edit" onclick="editTeamInline('${t.id}')">Edit</button>
+      <button class="trow-del"  onclick="deleteTeam('${t.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// ── Team CRUD ──────────────────────────────────────────
+function openTeamModal(id) {
+  cancelTeamEdit();
+  if (id) editTeamInline(id);
+  document.getElementById('teamOverlay').classList.add('open');
+}
+
+function editTeamInline(id) {
+  editingTeamId = id;
+  const t = db.teams.find(t => t.id === id);
+  document.getElementById('teamFormTitle').textContent = 'Edit: ' + t.name;
+  document.getElementById('tName').value = t.name;
+  document.getElementById('tLogoLabel').textContent = t.logo ? 'Replace logo…' : 'Choose image…';
+  const thumb = document.getElementById('tThumb');
+  if (t.logo) { thumb.src = t.logo; thumb.style.display = 'block'; }
+  else thumb.style.display = 'none';
+  document.getElementById('tCancelEdit').style.display = '';
+}
+
+function cancelTeamEdit() {
+  editingTeamId = null;
+  document.getElementById('teamFormTitle').textContent = 'New Team';
+  document.getElementById('tName').value = '';
+  document.getElementById('tLogo').value = '';
+  document.getElementById('tLogoLabel').textContent = 'Choose image…';
+  document.getElementById('tThumb').style.display = 'none';
+  document.getElementById('tCancelEdit').style.display = 'none';
+}
+
+async function saveTeam() {
+  const name = document.getElementById('tName').value.trim();
+  if (!name) return;
+  const fd = new FormData();
+  fd.append('name', name);
+  const file = document.getElementById('tLogo').files[0];
+  if (file) fd.append('logo', file);
+
+  if (editingTeamId) {
+    await fetch(`/api/teams/${editingTeamId}`, { method: 'PUT', body: fd });
+  } else {
+    await fetch('/api/teams', { method: 'POST', body: fd });
+  }
+  cancelTeamEdit();
+  await load();
+  renderTeamList();
+}
+
+async function deleteTeam(id) {
+  const t = db.teams.find(t => t.id === id);
+  const count = db.participants.filter(p => p.teamId === id).length;
+  const msg = count
+    ? `Delete "${t.name}"? This also removes ${count} participant(s).`
+    : `Delete "${t.name}"?`;
+  if (!confirm(msg)) return;
+  await fetch(`/api/teams/${id}`, { method: 'DELETE' });
+  if (editingTeamId === id) cancelTeamEdit();
+  await load();
+  renderTeamList();
+}
+
+function previewLogo() {
+  const file = document.getElementById('tLogo').files[0];
+  if (!file) return;
+  const thumb = document.getElementById('tThumb');
+  thumb.src = URL.createObjectURL(file);
+  thumb.style.display = 'block';
+  document.getElementById('tLogoLabel').textContent = file.name;
+}
+
+// ── Participant CRUD ───────────────────────────────────
+function openParticipantModal() {
+  editingParticipantId = null;
+  document.getElementById('pModalTitle').textContent = 'Add Participant';
+  document.getElementById('pName').value = '';
+  document.getElementById('pDeleteBtn').style.display = 'none';
+  populateTeamSelect(null);
+  document.getElementById('participantOverlay').classList.add('open');
+}
+
+function openEditParticipantModal() {
+  const p = db.participants[idx];
+  if (!p) return;
+  editingParticipantId = p.id;
+  document.getElementById('pModalTitle').textContent = 'Edit Participant';
+  document.getElementById('pName').value = p.name;
+  document.getElementById('pDeleteBtn').style.display = '';
+  populateTeamSelect(p.teamId);
+  document.getElementById('participantOverlay').classList.add('open');
+}
+
+function populateTeamSelect(selectedTeamId) {
+  const sel = document.getElementById('pTeam');
+  sel.innerHTML = db.teams.map(t =>
+    `<option value="${t.id}" ${t.id === selectedTeamId ? 'selected' : ''}>${t.name}</option>`
+  ).join('');
+  if (!db.teams.length) sel.innerHTML = '<option value="">— Add a team first —</option>';
+}
+
+async function saveParticipant() {
+  const name   = document.getElementById('pName').value.trim();
+  const teamId = document.getElementById('pTeam').value;
+  if (!name || !teamId) return;
+  const body = JSON.stringify({ name, teamId });
+  const headers = { 'Content-Type': 'application/json' };
+
+  if (editingParticipantId) {
+    await fetch(`/api/participants/${editingParticipantId}`, { method: 'PUT', body, headers });
+  } else {
+    await fetch('/api/participants', { method: 'POST', body, headers });
+    idx = db.participants.length; // will point to new last after reload
+  }
+  closeModals();
+  await load();
+  if (!editingParticipantId) idx = db.participants.length - 1;
+  render();
+}
+
+async function deleteParticipant() {
+  const p = db.participants[idx];
+  if (!p || !confirm(`Remove "${p.name}"?`)) return;
+  await fetch(`/api/participants/${p.id}`, { method: 'DELETE' });
+  closeModals();
+  idx = 0;
+  await load();
+}
+
+// ── Modal helpers ──────────────────────────────────────
+function closeModals() {
+  document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+}
+document.querySelectorAll('.overlay').forEach(o =>
+  o.addEventListener('click', e => { if (e.target === o) closeModals(); })
+);
+
+// ── Boot ───────────────────────────────────────────────
+load();
+</script>
+</body>
+</html>

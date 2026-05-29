@@ -1,0 +1,31 @@
+{
+  "teams": [
+    {
+      "id": "t1",
+      "name": "Les Mordeurs",
+      "logo": "photos/team-logos/3cde8eac8ec3c90f312215a2e193e5b4 - Bhoovana Dinoo.jpg"
+    },
+    {
+      "id": "3a1d7a75",
+      "name": "HeisenBug",
+      "logo": "photos/team-logos/ab6da78d-96ca-4a7f-a7fe-b3486e4ac7ea.jpg"
+    }
+  ],
+  "participants": [
+    {
+      "id": "p1",
+      "name": "Bhoovana Dinoo",
+      "teamId": "t1"
+    },
+    {
+      "id": "d2240286",
+      "name": "Mohammad Fahim Hosenbocus",
+      "teamId": "t1"
+    },
+    {
+      "id": "5b569286",
+      "name": "Harsh Greedhary",
+      "teamId": "3a1d7a75"
+    }
+  ]
+}
