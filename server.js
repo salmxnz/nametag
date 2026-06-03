@@ -176,8 +176,8 @@ html,body{width:340px;background:#000;overflow:hidden}
 .hright{right:-6px}
 .chackers::after{display:none}
 .cident{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:2px;gap:3px;z-index:10}
-.pname{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;letter-spacing:3px;line-height:1;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.7)}
-.porg{font-family:'Syne',sans-serif;font-size:7px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:rgba(160,150,255,.8);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.pname{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;letter-spacing:3px;line-height:1;color:#fff}
+.porg{font-family:'Syne',sans-serif;font-size:7px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:rgba(160,150,255,.8)}
 .logo-ring{width:96px;height:96px;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:rgba(130,120,248,.15);border:1px solid rgba(130,120,248,.4);margin-top:4px}
 .logo-img{width:100%;height:100%;object-fit:contain;padding:6px}
 .logo-photo{object-fit:cover;padding:0}
