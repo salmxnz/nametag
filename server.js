@@ -142,11 +142,10 @@ app.get('/print-all', (_req, res) => {
         <img class="himg hright" src="photos/hacker-right.png" alt="">
       </div>
       <div class="cfooter">
-        <img src="photos/su-logo-hovered.png"        class="fl" alt="SU">
+        <img src="photos/doppler-ai.webp"            class="fl" alt="Doppler AI">
         <img src="photos/Emtel_Logo.png"             class="fl" alt="Emtel">
         <img src="photos/CC-logo.webp"               class="fl" alt="Computer Club">
-        <img src="photos/uilo-ai-upscaled-trans.png" class="fl" alt="UILO">
-        <img src="photos/doppler-ai.webp"            class="fl" alt="Doppler AI">
+        <img src="photos/su-logo-hovered.png"        class="fl" alt="SU">
         <img src="photos/uom-logo.png"               class="fl" style="height:36px;max-width:58px" alt="UoM">
       </div>
     </div>`;
@@ -187,7 +186,7 @@ html,body{width:340px;background:#000;overflow:hidden}
 .logo-img{width:100%;height:100%;object-fit:contain;padding:6px}
 .logo-photo{object-fit:cover;padding:0}
 .logo-init{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:1px;text-align:center;color:#a78bfa}
-.cfooter{height:75px;display:flex;align-items:center;justify-content:space-evenly;gap:0;padding:0 10px;flex-shrink:0;position:relative;z-index:2;background:#fff;border-top:none}
+.cfooter{height:75px;display:flex;align-items:center;justify-content:center;gap:18px;padding:0;flex-shrink:0;position:relative;z-index:2;background:#fff;border-top:none}
 .fl{height:30px;width:auto;max-width:48px;object-fit:contain}
 </style>
 </head><body>${cards}</body></html>`);
