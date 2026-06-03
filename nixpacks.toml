@@ -1,7 +1,0 @@
-[variables]
-PUPPETEER_SKIP_DOWNLOAD = "true"
-CHROMIUM_PATH = "/usr/bin/chromium"
-
-[phases.setup]
-nixPkgs = ["nodejs_20", "chromium", "libnss3", "libatk1_0", "libatk-bridge2_0", "libcups2", "libgbm", "libasound2", "libpangocairo_1_0", "libxss", "libgtk3", "libxshmfence"]
-aptPkgs = ["libnss3", "libatk1.0-0", "libatk-bridge2.0-0", "libcups2", "libgbm1", "libasound2t64", "libpangocairo-1.0-0", "libxss1", "libgtk-3-0", "libxshmfence1"]
