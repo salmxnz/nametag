@@ -322,6 +322,10 @@ body{
     width:96mm!important;height:136mm!important;
     position:static!important;
   }
+  .logo-ring{
+    box-shadow:none!important;
+    border:1px solid rgba(130,120,248,.4)!important;
+  }
 }
 </style>
 </head>
@@ -339,7 +343,9 @@ body{
       <button class="nav" onclick="step(1)">&#8250;</button>
       <button class="ibtn" title="Add participant" onclick="openParticipantModal()">+</button>
       <button class="ibtn" title="Edit participant" onclick="openEditParticipantModal()" style="font-size:13px">&#9998;</button>
-      <button class="pbtn" onclick="window.print()">&#9658;&ensp;PRINT</button>
+      <button class="pbtn" onclick="printCurrent()">&#9658;&ensp;PRINT</button>
+      <button class="pbtn" style="background:#4a20a0" onclick="printAll()">&#9654;&#9654;&ensp;PRINT ALL</button>
+      <button class="pbtn" id="exportBtn" style="background:#1a6a30" onclick="exportAll()">&#11123;&ensp;EXPORT PDF</button>
     </div>
   </div>
 
@@ -699,6 +705,62 @@ async function deleteParticipant() {
   await load();
 }
 
+// ── Print helpers ──────────────────────────────────────
+function printFilename(participantIndex) {
+  const p = db.participants[participantIndex];
+  if (!p) return 'nametag';
+  const team = db.teams.find(t => t.id === p.teamId);
+  const no   = String(participantIndex + 1).padStart(2, '0');
+  const name = p.name.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_');
+  const tname = team ? team.name.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_') : 'NoTeam';
+  return `${no}_${name}_${tname}_nametag`;
+}
+
+function printCurrent() {
+  const prev = document.title;
+  document.title = printFilename(idx);
+  window.print();
+  document.title = prev;
+}
+
+async function exportAll() {
+  const btn = document.getElementById('exportBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating…';
+  try {
+    const res = await fetch('/api/export-all');
+    if (!res.ok) throw new Error(await res.text());
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'all_nametags.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Export failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '&#11123;&ensp;EXPORT PDF';
+  }
+}
+
+async function printAll() {
+  if (!db.participants.length) return;
+  const prev = document.title;
+  for (let i = 0; i < db.participants.length; i++) {
+    idx = i;
+    render();
+    await new Promise(r => setTimeout(r, 120));
+    document.title = printFilename(i);
+    window.print();
+    await new Promise(r => setTimeout(r, 300));
+  }
+  document.title = prev;
+  idx = 0;
+  render();
+}
+
 // ── Modal helpers ──────────────────────────────────────
 function closeModals() {
   document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
@@ -708,6 +770,7 @@ document.querySelectorAll('.overlay').forEach(o =>
 );
 
 // ── Boot ───────────────────────────────────────────────
+window._goTo = i => { idx = i; render(); };
 load();
 </script>
 </body>

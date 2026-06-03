@@ -1,31 +1,480 @@
 {
   "teams": [
     {
-      "id": "t1",
-      "name": "Les Mordeurs",
-      "logo": "photos/team-logos/3cde8eac8ec3c90f312215a2e193e5b4 - Bhoovana Dinoo.jpg"
+      "id": "b5adb910",
+      "name": "Binary Bandits",
+      "logo": "photos/team-logos/Binary Bandits.jpg"
     },
     {
-      "id": "3a1d7a75",
+      "id": "104a0911",
+      "name": "BlueSky",
+      "logo": "photos/team-logos/BlueSky.jpg"
+    },
+    {
+      "id": "736d05c5",
+      "name": "CipherCrew",
+      "logo": "photos/team-logos/CipherCrew.jpg"
+    },
+    {
+      "id": "59d9ed36",
+      "name": "DODO DEVS",
+      "logo": "photos/team-logos/DODO-DEVS.jpg"
+    },
+    {
+      "id": "32681bd6",
+      "name": "Freeapikeys",
+      "logo": "photos/team-logos/Freeapikeys.jpg"
+    },
+    {
+      "id": "935e4c19",
+      "name": "FRIDAY.exe",
+      "logo": "photos/team-logos/FRIDAY.exe.jpg"
+    },
+    {
+      "id": "3d6474d3",
       "name": "HeisenBug",
-      "logo": "photos/team-logos/ab6da78d-96ca-4a7f-a7fe-b3486e4ac7ea.jpg"
+      "logo": "photos/team-logos/HeisenBug.jpg"
+    },
+    {
+      "id": "607f6da6",
+      "name": "KindOf Developers",
+      "logo": "photos/team-logos/KindOf Developers.jpg"
+    },
+    {
+      "id": "62aac2b8",
+      "name": "Lazarus",
+      "logo": "photos/team-logos/Lazarus.jpg"
+    },
+    {
+      "id": "b6557123",
+      "name": "Les Mordeurs",
+      "logo": "photos/team-logos/0a39d76d-4f02-40a5-a23e-21b2d52201aa.jpg"
+    },
+    {
+      "id": "8d2d1c5a",
+      "name": "Nexova",
+      "logo": "photos/team-logos/Nexova.jpg"
+    },
+    {
+      "id": "71b9debf",
+      "name": "Peak",
+      "logo": "photos/team-logos/Peak.jpg"
     }
   ],
   "participants": [
     {
-      "id": "p1",
-      "name": "Bhoovana Dinoo",
-      "teamId": "t1"
+      "id": "5b8705bf",
+      "name": "Vinesha abdhoosee",
+      "email": "Vineshaabdhoosee04@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "b5adb910"
     },
     {
-      "id": "d2240286",
-      "name": "Mohammad Fahim Hosenbocus",
-      "teamId": "t1"
+      "id": "01028b28",
+      "name": "Vigneshwar Bhewa",
+      "email": "vbhewa77@gmail.com",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "b5adb910"
     },
     {
-      "id": "5b569286",
+      "id": "e5e4c530",
+      "name": "Humaa Bukreedan",
+      "email": "humaa.bukreedan@gmail.com",
+      "year": 2,
+      "food": "Veg",
+      "shirt": "M",
+      "teamId": "b5adb910"
+    },
+    {
+      "id": "02a71792",
+      "name": "Keshni Nunkoo",
+      "email": "keshni.nunkoo@gmail.com",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "b5adb910"
+    },
+    {
+      "id": "59d844f3",
+      "name": "Shreyash Juddoo Gauravsingh",
+      "email": "Shreyash.juddoo@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "104a0911"
+    },
+    {
+      "id": "6fd176c6",
+      "name": "Bhavesh Guptar",
+      "email": "bhavesh.guptar1@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "104a0911"
+    },
+    {
+      "id": "31fc7abf",
+      "name": "Saheel Nithoo",
+      "email": "saheel.nithoo@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "104a0911"
+    },
+    {
+      "id": "ffdbdc72",
+      "name": "Harsh Kumar Joottun",
+      "email": "Harsh.joottun@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "104a0911"
+    },
+    {
+      "id": "35199b13",
+      "name": "Lookman Ashraf Chitbahul",
+      "email": "lookman.chitbahul@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "736d05c5"
+    },
+    {
+      "id": "bd54ca61",
+      "name": "Siven Naisen Oodiah",
+      "email": "siven.oodiah@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "736d05c5"
+    },
+    {
+      "id": "11d8ea54",
+      "name": "Dhaaraa Kalisetty Appadu",
+      "email": "dhaaraa.kalisetty@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Veg",
+      "shirt": "M",
+      "teamId": "736d05c5"
+    },
+    {
+      "id": "72609d8f",
+      "name": "Amisha Devi Nugessur Seechurn",
+      "email": "amisha.seechurn@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "XS",
+      "teamId": "736d05c5"
+    },
+    {
+      "id": "b405c6b3",
+      "name": "Ramsurn Arya Kumar",
+      "email": "arya.ramsurn@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "XS",
+      "teamId": "59d9ed36"
+    },
+    {
+      "id": "10dafbb7",
+      "name": "Manav yenkutesu",
+      "email": "manav.yenkutesu@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "59d9ed36"
+    },
+    {
+      "id": "f0cf0090",
+      "name": "Pranav Kumar Khooblall",
+      "email": "Pranav.Khooblall1@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Veg",
+      "shirt": "M",
+      "teamId": "59d9ed36"
+    },
+    {
+      "id": "e05ba164",
+      "name": "Lavlesh Ramkhalawon",
+      "email": "lavlesh.ramkhalawon@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Veg",
+      "shirt": "M",
+      "teamId": "59d9ed36"
+    },
+    {
+      "id": "8e3b5f53",
+      "name": "Jin Xi Hassan Alii Li",
+      "email": "jin.li3@umail.uom.ac.mu",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "XXL",
+      "teamId": "32681bd6"
+    },
+    {
+      "id": "73161320",
+      "name": "Fahan Kaudeer",
+      "email": "fahan.kaud@gmail.com",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "32681bd6"
+    },
+    {
+      "id": "b4569bc9",
+      "name": "Aarav Seenauth",
+      "email": "aaravseenauth2006@gmail.com",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "32681bd6"
+    },
+    {
+      "id": "5b52d4e5",
+      "name": "Sujeebun Udhay",
+      "email": "ranveer.sujeebun@gmail.com",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "S",
+      "teamId": "32681bd6"
+    },
+    {
+      "id": "3d758dd1",
+      "name": "Deveshsingh Oodith",
+      "email": "deveshsingh.oodith@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "935e4c19"
+    },
+    {
+      "id": "500e264d",
+      "name": "Dhruv Veeraj Kumar Gunassee",
+      "email": "dhruv.gunassee@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "XL",
+      "teamId": "935e4c19"
+    },
+    {
+      "id": "a2e08074",
+      "name": "Beebee Suhayla Ozeer",
+      "email": "beebee.ozeer2@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "S",
+      "teamId": "935e4c19"
+    },
+    {
+      "id": "39ef870c",
+      "name": "Beedaysee Nal Akash",
+      "email": "nalakash158@gmail.com",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "935e4c19"
+    },
+    {
+      "id": "a8055a8a",
       "name": "Harsh Greedhary",
-      "teamId": "3a1d7a75"
+      "email": "harsh.greedhary@umail.uom.ac.mu",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "3d6474d3"
+    },
+    {
+      "id": "a665fd90",
+      "name": "Prashant Veeraragavoodoo",
+      "email": "prashant.veeraragavoodoo@umail.uom.ac.mu",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "3d6474d3"
+    },
+    {
+      "id": "8df3a1cd",
+      "name": "Dhavish Foolmaun",
+      "email": "dhavish.foolmaun@umail.uom.ac.mu",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "3d6474d3"
+    },
+    {
+      "id": "5e5268bb",
+      "name": "Roopshika Devi Ghoorah",
+      "email": "roopshika.ghoorah@umail.uom.ac.mu",
+      "year": 1,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "3d6474d3"
+    },
+    {
+      "id": "15526ad1",
+      "name": "Suhail Muhammad Ali Nohur",
+      "email": "muhammad.nohur3@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "XXL",
+      "teamId": "607f6da6"
+    },
+    {
+      "id": "785e30b0",
+      "name": "Kentish Thummanah",
+      "email": "kentish.thummanah@umail.uom.ac.mu",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "607f6da6"
+    },
+    {
+      "id": "ae94f2aa",
+      "name": "Sookaul Suhaasinee Sanjana",
+      "email": "suhaasinee.sookaul@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "XL",
+      "teamId": "607f6da6"
+    },
+    {
+      "id": "4d34e407",
+      "name": "Hans Celwyn Legentil",
+      "email": "legentilhanscelwyn@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "62aac2b8"
+    },
+    {
+      "id": "0a826271",
+      "name": "Zahrah Bint Shu'ayb Patel",
+      "email": "zahrahpatel03@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "S",
+      "teamId": "62aac2b8"
+    },
+    {
+      "id": "99a935d1",
+      "name": "Ankush Bhed Sookaloo",
+      "email": "ankushsookaloo12@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "62aac2b8"
+    },
+    {
+      "id": "563b6f1d",
+      "name": "Bhoovana Dinoo",
+      "email": "bhoovana.dinoo@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "XL",
+      "teamId": "b6557123"
+    },
+    {
+      "id": "66d669c2",
+      "name": "Mohammad Fahim Hosenbocus",
+      "email": "mohammad.hosenbocus8@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "XL",
+      "teamId": "b6557123"
+    },
+    {
+      "id": "c5d2aecb",
+      "name": "Muhammad Oowais Jugon",
+      "email": "muhammad.jugon1@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "S",
+      "teamId": "b6557123"
+    },
+    {
+      "id": "ec4e4122",
+      "name": "Hisham Cheytan",
+      "email": "hisham.cheytan@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "M",
+      "teamId": "b6557123"
+    },
+    {
+      "id": "f17bd246",
+      "name": "Yovneesh Khadun",
+      "email": "yovneesh.khadun1@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "XXL",
+      "teamId": "8d2d1c5a"
+    },
+    {
+      "id": "bea848d7",
+      "name": "Gaurav Kumar Hurrydoss",
+      "email": "gaurav.hurrydoss@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "8d2d1c5a"
+    },
+    {
+      "id": "6e9038fc",
+      "name": "Viash Kowlessur",
+      "email": "viash.kowlessur@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "S",
+      "teamId": "8d2d1c5a"
+    },
+    {
+      "id": "2434511d",
+      "name": "Paraouty Hasan Muhammad Naeem",
+      "email": "hasan.paraouty@umail.uom.ac.mu",
+      "year": 2,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "8d2d1c5a"
+    },
+    {
+      "id": "c9e439b6",
+      "name": "Yusra Begum Gheesah",
+      "email": "ygheesah@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "71b9debf"
+    },
+    {
+      "id": "8bcdb275",
+      "name": "Umar Jowaheer",
+      "email": "jowaheerumar@icloud.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "71b9debf"
+    },
+    {
+      "id": "be14b20a",
+      "name": "Hassan Jeetoo",
+      "email": "hassanjeetoo786@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "L",
+      "teamId": "71b9debf"
+    },
+    {
+      "id": "641c3d23",
+      "name": "Oweiss Gunga",
+      "email": "oweissgunga@gmail.com",
+      "year": 3,
+      "food": "Non-veg",
+      "shirt": "XL",
+      "teamId": "71b9debf"
     }
   ]
 }

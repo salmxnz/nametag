@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hackathon Invites</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=DM+Serif+Display:ital@0;1&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #17324d;
+      --ink2: #4d6984;
+      --ink3: #8aa0b4;
+      --pink: #ff4f93;
+      --pink2: #ff8cb8;
+      --purple: #7440c8;
+      --blue: #0c7bdc;
+      --font: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+      --serif: 'DM Serif Display', Georgia, serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #eef2f7;
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* ── controls (hidden on print) ── */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #e2eaf2;
+      border-radius: 999px;
+      padding: 8px 8px 8px 20px;
+      box-shadow: 0 8px 28px rgba(23, 50, 77, 0.08);
+    }
+
+    .toolbar span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink2);
+      margin-right: 6px;
+    }
+
+    .tab {
+      border: none;
+      background: #f2f5f9;
+      color: var(--ink2);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .tab.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .print-btn {
+      border: none;
+      background: var(--pink);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(255, 79, 147, 0.32);
+      transition: all .2s;
+    }
+
+    .print-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(255, 79, 147, 0.42);
+    }
+
+    /* ── invite card (the only thing that prints) ── */
+    .invite {
+      width: 680px;
+      height: 680px;
+      max-width: 92vw;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(23, 50, 77, 0.18);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* hidden version */
+    .invite.hidden {
+      display: none;
+    }
+
+    /* shared decorative top gradient field */
+    .inv-top {
+      position: relative;
+      flex: 0 0 auto;
+      height: 248px;
+      background: url('photos/bg.jpg') center/cover no-repeat;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .inv-top::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 0, 20, 0.45);
+    }
+
+    .inv-grain {
+      display: none;
+    }
+
+    .inv-badge {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: #fff;
+    }
+
+    .inv-badge .kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 14px;
+    }
+
+    .inv-badge .event {
+      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      font-size: 32px;
+      line-height: 1;
+      letter-spacing: -1px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .inv-badge .event img {
+      height: 38px;
+      width: auto;
+    }
+
+    .inv-badge .year {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
+      padding: 5px 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* body */
+    .inv-body {
+      flex: 1;
+      padding: 38px 55px 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .inv-body-company {
+      flex: 1;
+      padding: 38px 55px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .inv-role {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 18px;
+    }
+
+    .inv-lead {
+      font-size: 19px;
+      color: var(--ink2);
+      line-height: 1.6;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .inv-name {
+      font-family: var(--serif);
+      font-size: 38px;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+      margin: 10px 0 10px;
+    }
+
+    .inv-trailing {
+      font-size: 16px;
+      color: var(--ink2);
+      line-height: 1.5;
+      max-width: 460px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .inv-trailing strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .inv-date {
+      margin-top: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--ink2);
+    }
+
+    .inv-location {
+      margin-top: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--ink2);
+    }
+
+    .inv-divider {
+      width: 54px;
+      height: 3px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+      margin: 12px auto 0px;
+    }
+
+    .inv-space {
+      margin: 12px;
+     }
+
+    /* footer meta row */
+    .inv-meta {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 48px;
+      border-top: 1px solid #eef2f7;
+      background: #fff;
+    }
+
+    .inv-meta img {
+      height: 32px;
+      width: auto;
+    }
+
+    /* ══════ AGENDA ══════ */
+    .agenda-card {
+      width: 680px;
+      max-width: 92vw;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(23, 50, 77, 0.18);
+      display: flex;
+      flex-direction: column;
+    }
+    .agenda-card.hidden { display: none; }
+
+    .agenda-body {
+      padding: 36px 48px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .agenda-day-pill {
+      display: inline-flex;
+      align-self: center;
+      background: var(--ink);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 6px 20px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+    }
+
+    .agenda-workshop-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .agenda-workshop-desc {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.55;
+      text-align: center;
+      max-width: 500px;
+      margin: 0 auto 28px;
+    }
+
+    .agenda-schedule {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid #e2eaf2;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .agenda-row {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .agenda-row + .agenda-row {
+      border-top: 1px solid #e2eaf2;
+    }
+
+    .agenda-time {
+      flex: 0 0 110px;
+      padding: 14px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink3);
+      letter-spacing: 0.5px;
+      border-right: 1px solid #e2eaf2;
+      display: flex;
+      align-items: center;
+      background: #f8fafc;
+    }
+
+    .agenda-slot {
+      flex: 1;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .agenda-slot-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .agenda-slot-sub {
+      font-size: 12px;
+      color: var(--ink3);
+      margin-top: 2px;
+    }
+
+    .agenda-row.break .agenda-slot-title {
+      color: var(--ink2);
+      font-weight: 600;
+    }
+
+    .agenda-row.break .agenda-time,
+    .agenda-row.break .agenda-slot {
+      background: #f8fafc;
+    }
+
+    .agenda-meta {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      padding-top: 20px;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .agenda-meta img {
+      height: 28px;
+      width: auto;
+    }
+
+    /* ══════ PRINT ══════ */
+    @media print {
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+
+      .toolbar { display: none !important; }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* invites: square page */
+      .invite:not(.hidden) {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 680px !important;
+        height: 680px !important;
+        max-width: none !important;
+        margin: 0 !important;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* agendas: auto-height, no chrome */
+      .agenda-card:not(.hidden) {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 680px !important;
+        max-width: none !important;
+        margin: 0 auto !important;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOOLBAR (screen only) -->
+  <div class="toolbar">
+    <span>Invite:</span>
+    <button class="tab active" id="tab1" onclick="showInvite(1)">Company Invite</button>
+    <button class="tab" id="tab2" onclick="showInvite(2)">Jury Invite</button>
+    <button class="tab" id="tab3" onclick="showInvite(3)">Agenda Day 1</button>
+    <button class="tab" id="tab4" onclick="showInvite(4)">Agenda Day 2</button>
+    <button class="tab" id="tab5" onclick="showInvite(5)">Hackathon Day</button>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9" />
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+        <rect x="6" y="14" width="12" height="8" />
+      </svg>
+      Print / Save as PDF
+    </button>
+  </div>
+
+  <!-- ════════ INVITE 1 — COMPANY ════════ -->
+  <div class="invite" id="invite1">
+    <div class="inv-top">
+      <div class="inv-grain"></div>
+      <div class="inv-badge">
+        <div class="kicker">Official Invitation</div>
+        <div class="event">Agentforce <img src="photos/hackathon.png" alt="Hackathon" /></div>
+        <div class="year">2026</div>
+
+      </div>
+    </div>
+    <div class="inv-body-company">
+      <p class="inv-lead">Your company has been invited to join <strong>Nexavenu</strong> in the <strong>Agentforce
+          Hackathon</strong>, a gathering of the brightest teams building what comes next. We'd be honoured to have your
+        presence.</p>
+      <div class="inv-divider"></div>
+      <p class="inv-date">18 June 2026 • 9 AM - 4 PM</p>
+      <p class="inv-location">University of Mauritius • Raised Plaza</p>
+      <div class="inv-meta">
+        <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ INVITE 2 — JURY ════════ -->
+  <div class="invite hidden" id="invite2">
+    <div class="inv-top">
+      <div class="inv-grain"></div>
+      <div class="inv-badge">
+        <div class="kicker">Official Invitation</div>
+        <div class="event">Agentforce <img src="photos/hackathon.png" alt="Hackathon" /></div>
+        <div class="year">2026</div>
+
+      </div>
+    </div>
+    <div class="inv-body">
+      <p class="inv-lead">You have been invited to serve as a</p>
+      <p class="inv-name">Jury Member</p>
+      <p class="inv-trailing">for the <strong>Agentforce Hackathon 2026</strong>. Your expertise will help shape and
+        recognise the most outstanding work.</p>
+      <div class="inv-divider"></div>
+      <div class="inv-space"></div>
+      <p class="inv-date">18 June 2026 • 9 AM - 4 PM</p>
+      <p class="inv-location">University of Mauritius • Raised Plaza</p>
+      <div class="inv-meta">
+        <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ AGENDA — DAY 1 ════════ -->
+  <div class="agenda-card hidden" id="invite3">
+    <div class="inv-top">
+      <div class="inv-badge">
+        <div class="kicker">Workshop Agenda</div>
+        <div class="event">Agentforce <img src="photos/hackathon.png" alt="Hackathon" /></div>
+        <div class="year">2026</div>
+      </div>
+    </div>
+    <div class="agenda-body">
+      <div class="agenda-day-pill">Day 1 — Thursday 4th June</div>
+      <div class="agenda-workshop-title">Workshop 1: Salesforce + Agentforce</div>
+      <p class="agenda-workshop-desc">Design AI-assisted business flows in Salesforce and build Agentforce-powered assistants that solve real customer and operations problems.</p>
+      <div class="agenda-schedule">
+        <div class="agenda-row">
+          <div class="agenda-time">9:30 AM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Session 1</div>
+            <div class="agenda-slot-sub">Salesforce + Agentforce Workshop</div>
+          </div>
+        </div>
+        <div class="agenda-row break">
+          <div class="agenda-time">12:00 PM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Tea Break</div>
+          </div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">12:30 PM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Session 2</div>
+            <div class="agenda-slot-sub">Salesforce + Agentforce Workshop (continued)</div>
+          </div>
+        </div>
+        <div class="agenda-row break">
+          <div class="agenda-time">3:30 PM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">End of Day</div>
+          </div>
+        </div>
+      </div>
+      <div class="agenda-meta">
+        <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ AGENDA — DAY 2 ════════ -->
+  <div class="agenda-card hidden" id="invite4">
+    <div class="inv-top">
+      <div class="inv-badge">
+        <div class="kicker">Workshop Agenda</div>
+        <div class="event">Agentforce <img src="photos/hackathon.png" alt="Hackathon" /></div>
+        <div class="year">2026</div>
+      </div>
+    </div>
+    <div class="agenda-body">
+      <div class="agenda-day-pill">Day 2 — Friday 5th June</div>
+      <div class="agenda-workshop-title">Workshop 2: MuleSoft</div>
+      <p class="agenda-workshop-desc">Connect fragmented systems and automate cross-platform workflows with APIs, orchestration, and reusable integration patterns.</p>
+      <div class="agenda-schedule">
+        <div class="agenda-row">
+          <div class="agenda-time">9:30 AM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Session 1</div>
+            <div class="agenda-slot-sub">MuleSoft Workshop</div>
+          </div>
+        </div>
+        <div class="agenda-row break">
+          <div class="agenda-time">12:00 PM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Tea Break</div>
+          </div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">12:30 PM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Session 2</div>
+            <div class="agenda-slot-sub">MuleSoft Workshop (continued)</div>
+          </div>
+        </div>
+        <div class="agenda-row break">
+          <div class="agenda-time">3:30 PM</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">End of Day</div>
+          </div>
+        </div>
+      </div>
+      <div class="agenda-meta">
+        <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ AGENDA — HACKATHON DAY ════════ -->
+  <div class="agenda-card hidden" id="invite5">
+    <div class="inv-top">
+      <div class="inv-badge">
+        <div class="kicker">Event Agenda</div>
+        <div class="event">Agentforce <img src="photos/hackathon.png" alt="Hackathon" /></div>
+        <div class="year">2026</div>
+      </div>
+    </div>
+    <div class="agenda-body">
+      <div class="agenda-day-pill">Thursday 18th June 2026</div>
+      <div class="agenda-workshop-title">Hackathon Day</div>
+      <p class="agenda-workshop-desc">University of Mauritius • Raised Plaza • 9:00 AM – 4:00 PM</p>
+      <div class="agenda-schedule">
+        <div class="agenda-row">
+          <div class="agenda-time">9:30 – 10:00</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Opening Speech</div>
+          </div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">10:00 – 12:00</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">First Part of Jury Evaluation</div>
+          </div>
+        </div>
+        <div class="agenda-row break">
+          <div class="agenda-time">12:00 – 13:00</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Lunch &amp; Networking Session</div>
+          </div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">13:00 – 15:00</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Second Part of Jury Evaluation</div>
+          </div>
+        </div>
+        <div class="agenda-row break">
+          <div class="agenda-time">15:00 – 15:30</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Jury Debriefing &amp; Tea Break</div>
+          </div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">15:30 – 16:30</div>
+          <div class="agenda-slot">
+            <div class="agenda-slot-title">Closing &amp; Award Ceremony</div>
+          </div>
+        </div>
+      </div>
+      <div class="agenda-meta">
+        <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let printStyle = document.createElement('style');
+    document.head.appendChild(printStyle);
+
+    function showInvite(n) {
+      [1, 2, 3, 4, 5].forEach(i => {
+        document.getElementById('invite' + i).classList.toggle('hidden', n !== i);
+        document.getElementById('tab' + i).classList.toggle('active', n === i);
+      });
+    }
+
+    globalThis.addEventListener('beforeprint', () => {
+      const agenda = document.querySelector('.agenda-card:not(.hidden)');
+      if (agenda) {
+        const h = Math.ceil(agenda.getBoundingClientRect().height);
+        printStyle.textContent = `@page { size: 680px ${h}px; margin: 0; }`;
+      } else {
+        printStyle.textContent = `@page { size: 680px 680px; margin: 0; }`;
+      }
+    });
+  </script>
+</body>
+
+</html>
