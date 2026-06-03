@@ -7,6 +7,11 @@ const puppeteer  = require('puppeteer-core');
 const { PDFDocument } = require('pdf-lib');
 
 const app  = express();
+// export-all can take 2–3 min on first run — keep the socket alive
+app.use((req, res, next) => {
+  if (req.path === '/api/export-all') res.setTimeout(300000);
+  next();
+});
 const DB   = path.join(__dirname, 'data', 'db.json');
 const LOGO = path.join(__dirname, 'photos', 'team-logos');
 
@@ -190,39 +195,50 @@ html,body{width:340px;background:#000;overflow:hidden}
 
 // ── Bulk PDF export ───────────────────────────────────
 app.get('/api/export-all', async (_req, res) => {
-  const db = read();
-  if (!db.participants.length) return res.status(400).json({ error: 'No participants' });
-
-  const PORT_ = process.env.PORT || 3000;
-  const chromiumPaths = [
-    process.env.CHROMIUM_PATH,
-    '/usr/bin/chromium',
-    '/usr/bin/chromium-browser',
-    '/usr/bin/google-chrome',
-    '/usr/bin/google-chrome-stable',
-  ].filter(Boolean);
-  const executablePath = chromiumPaths.find(p => { try { return require('fs').existsSync(p); } catch { return false; } });
-  if (!executablePath) throw new Error('No Chromium found. Set CHROMIUM_PATH env var.');
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-  });
   try {
-    const page = await browser.newPage();
-    await page.goto(`http://localhost:${PORT_}/print-all`, { waitUntil: 'networkidle0' });
+    const db = read();
+    if (!db.participants.length) return res.status(400).json({ error: 'No participants' });
 
-    const pdfBytes = await page.pdf({
-      width:  '340px',
-      height: '490px',
-      printBackground: true,
+    const PORT_ = process.env.PORT || 3000;
+    const chromiumPaths = [
+      process.env.CHROMIUM_PATH,
+      '/usr/bin/chromium',
+      '/usr/bin/chromium-browser',
+      '/usr/bin/google-chrome',
+      '/usr/bin/google-chrome-stable',
+    ].filter(Boolean);
+    const executablePath = chromiumPaths.find(p => { try { return fs.existsSync(p); } catch { return false; } });
+    if (!executablePath) return res.status(500).json({ error: 'No Chromium found. Set CHROMIUM_PATH env var.' });
+
+    const browser = await puppeteer.launch({
+      headless: true,
+      executablePath,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
     });
+    try {
+      const page = await browser.newPage();
+      // use 127.0.0.1 to avoid DNS resolution issues inside the container
+      await page.goto(`http://127.0.0.1:${PORT_}/print-all`, {
+        waitUntil: 'networkidle0',
+        timeout: 120000,
+      });
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename="all_nametags.pdf"');
-    res.end(pdfBytes);
-  } finally {
-    await browser.close();
+      const pdfBytes = await page.pdf({
+        width:  '340px',
+        height: '490px',
+        printBackground: true,
+        timeout: 120000,
+      });
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="all_nametags.pdf"');
+      res.end(pdfBytes);
+    } finally {
+      await browser.close();
+    }
+  } catch (err) {
+    console.error('export-all error:', err);
+    if (!res.headersSent) res.status(500).json({ error: err.message });
   }
 });
 
