@@ -3,7 +3,7 @@ const multer     = require('multer');
 const fs         = require('fs');
 const path       = require('path');
 const crypto     = require('crypto');
-const puppeteer  = require('puppeteer');
+const puppeteer  = require('puppeteer-core');
 const { PDFDocument } = require('pdf-lib');
 
 const app  = express();
@@ -194,7 +194,20 @@ app.get('/api/export-all', async (_req, res) => {
   if (!db.participants.length) return res.status(400).json({ error: 'No participants' });
 
   const PORT_ = process.env.PORT || 3000;
-  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+  const chromiumPaths = [
+    process.env.CHROMIUM_PATH,
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+  ].filter(Boolean);
+  const executablePath = chromiumPaths.find(p => { try { return require('fs').existsSync(p); } catch { return false; } });
+  if (!executablePath) throw new Error('No Chromium found. Set CHROMIUM_PATH env var.');
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+  });
   try {
     const page = await browser.newPage();
     await page.goto(`http://localhost:${PORT_}/print-all`, { waitUntil: 'networkidle0' });
