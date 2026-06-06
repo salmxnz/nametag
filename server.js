@@ -108,11 +108,11 @@ app.get('/print-all', (_req, res) => {
 
   const initials = s => s.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const nameSize = n => {
-    if (n <= 3)  return '36px';
-    if (n <= 7)  return '31px';
-    if (n <= 11) return '25px';
-    if (n <= 15) return '21px';
-    return '17px';
+    if (n <= 3)  return '24px';
+    if (n <= 7)  return '21px';
+    if (n <= 11) return '17px';
+    if (n <= 15) return '14px';
+    return '12px';
   };
 
   const cards = db.participants.map((p) => {
@@ -146,7 +146,7 @@ app.get('/print-all', (_req, res) => {
         <img src="photos/Emtel_Logo.png"             class="fl" alt="Emtel">
         <img src="photos/CC-logo.webp"               class="fl" alt="Computer Club">
         <img src="photos/su-logo-hovered.png"        class="fl" alt="SU">
-        <img src="photos/uom-logo.png"               class="fl" style="height:36px;max-width:58px" alt="UoM">
+        <img src="photos/uom-logo.png"               class="fl" style="height:24px;max-width:38px" alt="UoM">
       </div>
     </div>`;
   }).join('\n');
@@ -158,36 +158,36 @@ app.get('/print-all', (_req, res) => {
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-@page{margin:0;size:340px 490px}
-html,body{width:340px;background:#000;overflow:hidden}
+@page{margin:0;size:227px 340px}
+html,body{width:227px;background:#000;overflow:hidden}
 .card{
-  width:340px;height:490px;
+  width:227px;height:340px;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;
   background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 55%),url('photos/bg.jpg') center/cover no-repeat;
   page-break-after:always;break-after:page;
 }
-.lhole{width:20px;height:10px;border-radius:10px;position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:20;border:2px solid rgba(255,255,255,.12);background:rgba(0,0,0,.7)}
-.ctop{padding:56px 20px 0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;background:transparent}
-.nxlogo{height:14px;width:auto;filter:grayscale(1) brightness(6);opacity:.85}
+.lhole{width:14px;height:7px;border-radius:7px;position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:20;border:2px solid rgba(255,255,255,.12);background:rgba(0,0,0,.7)}
+.ctop{padding:36px 14px 0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;background:transparent}
+.nxlogo{height:10px;width:auto;filter:grayscale(1) brightness(6);opacity:.85}
 .cspacer{flex:1}
-.ctitle{padding:0 16px 0;text-align:center;flex-shrink:0;position:relative;z-index:2}
-.tsf{display:block;font-family:'Arial Black','Arial Bold',Arial,sans-serif;font-size:16px;font-weight:900;letter-spacing:.5px;color:rgba(255,255,255,.9);margin-bottom:4px}
-.thack-img{display:block;width:100%;max-width:238px;height:auto;margin:0 auto}
-.chackers{position:relative;overflow:hidden;height:190px;flex-shrink:0}
-.himg{position:absolute;bottom:0;height:148px;width:auto;mix-blend-mode:screen;z-index:2}
-.hleft{left:-6px}
-.hright{right:-6px}
+.ctitle{padding:0 11px 0;text-align:center;flex-shrink:0;position:relative;z-index:2}
+.tsf{display:block;font-family:'Arial Black','Arial Bold',Arial,sans-serif;font-size:11px;font-weight:900;letter-spacing:.5px;color:rgba(255,255,255,.9);margin-bottom:3px}
+.thack-img{display:block;width:100%;max-width:160px;height:auto;margin:0 auto}
+.chackers{position:relative;overflow:hidden;height:128px;flex-shrink:0}
+.himg{position:absolute;bottom:0;height:100px;width:auto;mix-blend-mode:screen;z-index:2}
+.hleft{left:-4px}
+.hright{right:-4px}
 .chackers::after{display:none}
-.cident{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:2px;gap:3px;z-index:10}
-.pname{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;letter-spacing:3px;line-height:1;color:#fff}
-.porg{font-family:'Syne',sans-serif;font-size:7px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:rgba(160,150,255,.8)}
-.logo-ring{width:96px;height:96px;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:rgba(130,120,248,.15);border:1px solid rgba(130,120,248,.4);margin-top:4px}
-.logo-img{width:100%;height:100%;object-fit:contain;padding:6px}
+.cident{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:2px;gap:2px;z-index:10}
+.pname{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:19px;letter-spacing:2px;line-height:1;color:#fff}
+.porg{font-family:'Syne',sans-serif;font-size:5px;font-weight:400;letter-spacing:5px;text-transform:uppercase;color:rgba(160,150,255,.8)}
+.logo-ring{width:64px;height:64px;border-radius:11px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:rgba(130,120,248,.15);border:1px solid rgba(130,120,248,.4);margin-top:3px}
+.logo-img{width:100%;height:100%;object-fit:contain;padding:4px}
 .logo-photo{object-fit:cover;padding:0}
-.logo-init{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;letter-spacing:1px;text-align:center;color:#a78bfa}
-.cfooter{height:75px;display:flex;align-items:center;justify-content:center;gap:18px;padding:0;flex-shrink:0;position:relative;z-index:2;background:#fff;border-top:none}
-.fl{height:30px;width:auto;max-width:48px;object-fit:contain}
+.logo-init{font-family:'Orbitron',monospace;font-size:12px;font-weight:900;letter-spacing:1px;text-align:center;color:#a78bfa}
+.cfooter{height:50px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0;flex-shrink:0;position:relative;z-index:2;background:#fff;border-top:none}
+.fl{height:20px;width:auto;max-width:32px;object-fit:contain}
 </style>
 </head><body>${cards}</body></html>`);
 });
@@ -223,8 +223,8 @@ app.get('/api/export-all', async (_req, res) => {
       });
 
       const pdfBytes = await page.pdf({
-        width:  '340px',
-        height: '490px',
+        width:  '227px',
+        height: '340px',
         printBackground: true,
         timeout: 120000,
       });
