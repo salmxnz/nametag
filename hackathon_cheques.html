@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Agentforce Hackathon — Prize Cheques</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --font:  'Instrument Sans','Helvetica Neue',Arial,sans-serif;
+  --serif: 'DM Serif Display',Georgia,serif;
+  --navy:  #17324D;
+  --pink:  #FF4F93;
+  --mid:   #4D6984;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: #d8dde5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 40px 20px 72px;
+}
+
+/* ─── toolbar ─── */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dce6f0;
+  border-radius: 999px;
+  padding: 8px 8px 8px 20px;
+  box-shadow: 0 8px 28px rgba(23,50,77,0.09);
+}
+.toolbar-label { font-size: 13px; font-weight: 600; color: var(--mid); margin-right: 4px; }
+.tab {
+  border: none; background: #f2f5f9; color: var(--mid);
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  padding: 9px 18px; border-radius: 999px; cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
+}
+.tab.active { background: var(--navy); color: #fff; }
+.tab:hover:not(.active) { background: #e4eaf2; }
+.print-btn {
+  border: none; background: var(--pink); color: #fff;
+  font-family: var(--font); font-size: 13px; font-weight: 700;
+  padding: 10px 22px; border-radius: 999px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 6px 20px rgba(255,79,147,0.32);
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+.print-btn:hover  { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(255,79,147,0.42); }
+.print-btn:active { transform: scale(0.97); }
+
+/*
+  ══════════════════════════════════════════════════
+  CHEQUE  70 cm × 40 cm  →  screen 700 × 400 px
+  print page: 71 cm × 41 cm (0.5 cm bleed each side)
+  ══════════════════════════════════════════════════
+*/
+.cheque-wrap {
+  flex-shrink: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(23,50,77,0.32), 0 4px 16px rgba(23,50,77,0.14);
+}
+.cheque-wrap.hidden { display: none; }
+
+.cheque {
+  width: 700px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* Nexavenu gradient — navy left → purple mid → pink → sky-blue right */
+  background: linear-gradient(110deg,
+    #0e1f30  0%,
+    #17324D 15%,
+    #2e1060 38%,
+    #7a1250 58%,
+    #e03070 75%,
+    #a060e8 88%,
+    #60b8f8 100%
+  );
+}
+
+/* ── MAIN BODY (top section, above footer) ── */
+.cheque-body {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 28px 18px 28px;
+}
+
+/* watermark trophy — centred behind body content */
+.cheque-wm {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+}
+.cheque-wm img {
+  height: 280px;
+  width: auto;
+  mix-blend-mode: soft-light;
+  opacity: 0.14;
+}
+
+/* all text above watermark */
+.cheque-body > *:not(.cheque-wm) { position: relative; z-index: 1; }
+
+/* ── TOP ROW: agentforce+hackathon left | nexavenu+date right ── */
+.cheque-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cheque-event {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+/* "Agentforce" — same as nametag: Arial Black */
+.cheque-event-kicker {
+  font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.9);
+  line-height: 1;
+}
+.cheque-hack-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.cheque-top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+.cheque-nxv-logo {
+  height: 20px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+.cheque-date {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ── MIDDLE: winner label + name pill | amount ── */
+.cheque-mid-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-top: 0;
+}
+
+.cheque-winner-side {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cheque-winner-label {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+}
+/* blank writing box — team writes their name with a marker */
+.cheque-winner-pill {
+  background: rgba(255,255,255,0.35);
+  border-radius: 6px;
+  width: 220px;
+  height: 44px;
+  display: block;
+}
+.cheque-winner-text {
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--navy);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* amount — right side, large */
+.cheque-amount-side {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.cheque-amount {
+  font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+}
+.cheque-amount .rs-prefix {
+  font-size: 18px;
+  font-weight: 700;
+  vertical-align: 0.22em;
+  margin-right: 3px;
+  opacity: 0.7;
+  letter-spacing: 0;
+}
+.cheque-words {
+  font-size: 11px;
+  font-weight: 600;
+  font-style: italic;
+  color: rgba(255,255,255,0.45);
+}
+
+/* ── FOOTER BAR: white, logos row ── */
+.cheque-footer {
+  flex-shrink: 0;
+  background: #fff;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 0 28px;
+}
+.cheque-footer img {
+  height: 28px;
+  width: auto;
+  max-width: 72px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+/* SU logo has a black background — mix-blend-mode:multiply drops it on white */
+.cheque-footer .logo-su {
+  mix-blend-mode: multiply;
+}
+/* UoM crest is colourful — keep it */
+/* SU has dark bg — keep white bg from the element */
+
+/* ── PRINT ── */
+@media print {
+  @page { size: 700px 400px; margin: 0; }
+
+  html, body {
+    width: 700px !important;
+    height: 400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    display: block !important;
+    overflow: hidden !important;
+  }
+
+  .toolbar { display: none !important; }
+
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  .cheque-wrap.hidden { display: none !important; }
+
+  .cheque-wrap:not(.hidden) {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 700px !important;
+    height: 400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+
+  .cheque {
+    width: 700px !important;
+    height: 400px !important;
+    border-radius: 0 !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <span class="toolbar-label">Prize Cheque:</span>
+  <button class="tab active" id="tab1" onclick="show(1)">First Place</button>
+  <button class="tab"        id="tab2" onclick="show(2)">Second Place</button>
+  <button class="tab"        id="tab3" onclick="show(3)">Third Place</button>
+  <button class="tab"        id="tab4" onclick="show(4)">Popularity Award</button>
+  <button class="print-btn" onclick="window.print()">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print / Save PDF
+  </button>
+</div>
+
+<!-- ═══ FIRST PLACE ═══ -->
+<div class="cheque-wrap" id="c1">
+  <div class="cheque">
+    <div class="cheque-body">
+      <div class="cheque-wm"><img src="photos/first-place.png" alt=""/></div>
+      <div class="cheque-top-row">
+        <div class="cheque-event">
+          <span class="cheque-event-kicker">Agentforce</span>
+          <img class="cheque-hack-logo" src="photos/hackathon.png" alt="Hackathon"/>
+        </div>
+        <div class="cheque-top-right">
+          <img class="cheque-nxv-logo" src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <span class="cheque-date">18 / 06 / 2026</span>
+        </div>
+      </div>
+      <div class="cheque-mid-row">
+        <div class="cheque-winner-side">
+          <span class="cheque-winner-label">First Place</span>
+          <div class="cheque-winner-pill"></div>
+        </div>
+        <div class="cheque-amount-side">
+          <div class="cheque-amount"><span class="rs-prefix">RS</span>30,000</div>
+          <div class="cheque-words">Thirty Thousand Rupees only</div>
+        </div>
+      </div>
+    </div>
+    <div class="cheque-footer">
+      <img src="photos/doppler-ai.webp"            alt="Doppler AI"/>
+      <img src="photos/Emtel_Logo.png"              alt="Emtel"/>
+      <img src="photos/CC-logo.webp"                alt="Computer Club"/>
+      <img src="photos/su-logo-hovered.png"         alt="Student Union" class="logo-su"/>
+      <img src="photos/uom-logo.png"                alt="UoM"/>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECOND PLACE ═══ -->
+<div class="cheque-wrap hidden" id="c2">
+  <div class="cheque">
+    <div class="cheque-body">
+      <div class="cheque-wm"><img src="photos/second-place-silver.png" alt=""/></div>
+      <div class="cheque-top-row">
+        <div class="cheque-event">
+          <span class="cheque-event-kicker">Agentforce</span>
+          <img class="cheque-hack-logo" src="photos/hackathon.png" alt="Hackathon"/>
+        </div>
+        <div class="cheque-top-right">
+          <img class="cheque-nxv-logo" src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <span class="cheque-date">18 / 06 / 2026</span>
+        </div>
+      </div>
+      <div class="cheque-mid-row">
+        <div class="cheque-winner-side">
+          <span class="cheque-winner-label">Second Place</span>
+          <div class="cheque-winner-pill"></div>
+        </div>
+        <div class="cheque-amount-side">
+          <div class="cheque-amount"><span class="rs-prefix">RS</span>20,000</div>
+          <div class="cheque-words">Twenty Thousand Rupees only</div>
+        </div>
+      </div>
+    </div>
+    <div class="cheque-footer">
+      <img src="photos/doppler-ai.webp"            alt="Doppler AI"/>
+      <img src="photos/Emtel_Logo.png"              alt="Emtel"/>
+      <img src="photos/CC-logo.webp"                alt="Computer Club"/>
+      <img src="photos/su-logo-hovered.png"         alt="Student Union" class="logo-su"/>
+      <img src="photos/uom-logo.png"                alt="UoM"/>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ THIRD PLACE ═══ -->
+<div class="cheque-wrap hidden" id="c3">
+  <div class="cheque">
+    <div class="cheque-body">
+      <div class="cheque-wm"><img src="photos/third-place-bronze.png" alt=""/></div>
+      <div class="cheque-top-row">
+        <div class="cheque-event">
+          <span class="cheque-event-kicker">Agentforce</span>
+          <img class="cheque-hack-logo" src="photos/hackathon.png" alt="Hackathon"/>
+        </div>
+        <div class="cheque-top-right">
+          <img class="cheque-nxv-logo" src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <span class="cheque-date">18 / 06 / 2026</span>
+        </div>
+      </div>
+      <div class="cheque-mid-row">
+        <div class="cheque-winner-side">
+          <span class="cheque-winner-label">Third Place</span>
+          <div class="cheque-winner-pill"></div>
+        </div>
+        <div class="cheque-amount-side">
+          <div class="cheque-amount"><span class="rs-prefix">RS</span>10,000</div>
+          <div class="cheque-words">Ten Thousand Rupees only</div>
+        </div>
+      </div>
+    </div>
+    <div class="cheque-footer">
+      <img src="photos/doppler-ai.webp"            alt="Doppler AI"/>
+      <img src="photos/Emtel_Logo.png"              alt="Emtel"/>
+      <img src="photos/CC-logo.webp"                alt="Computer Club"/>
+      <img src="photos/su-logo-hovered.png"         alt="Student Union" class="logo-su"/>
+      <img src="photos/uom-logo.png"                alt="UoM"/>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ POPULARITY AWARD ═══ -->
+<div class="cheque-wrap hidden" id="c4">
+  <div class="cheque">
+    <div class="cheque-body">
+      <div class="cheque-wm">
+        <div style="font-size:130px;line-height:1;opacity:0.13;mix-blend-mode:soft-light;pointer-events:none;user-select:none;">⭐</div>
+      </div>
+      <div class="cheque-top-row">
+        <div class="cheque-event">
+          <span class="cheque-event-kicker">Agentforce</span>
+          <img class="cheque-hack-logo" src="photos/hackathon.png" alt="Hackathon"/>
+        </div>
+        <div class="cheque-top-right">
+          <img class="cheque-nxv-logo" src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <span class="cheque-date">18 / 06 / 2026</span>
+        </div>
+      </div>
+      <div class="cheque-mid-row">
+        <div class="cheque-winner-side">
+          <span class="cheque-winner-label">Popularity Award</span>
+          <div class="cheque-winner-pill"></div>
+        </div>
+        <div class="cheque-amount-side">
+          <div class="cheque-amount"><span class="rs-prefix">RS</span>5,000</div>
+          <div class="cheque-words">Five Thousand Rupees only</div>
+        </div>
+      </div>
+    </div>
+    <div class="cheque-footer">
+      <img src="photos/doppler-ai.webp"            alt="Doppler AI"/>
+      <img src="photos/Emtel_Logo.png"              alt="Emtel"/>
+      <img src="photos/CC-logo.webp"                alt="Computer Club"/>
+      <img src="photos/su-logo-hovered.png"         alt="Student Union" class="logo-su"/>
+      <img src="photos/uom-logo.png"                alt="UoM"/>
+    </div>
+  </div>
+</div>
+
+<script>
+let printStyle = document.createElement('style');
+document.head.appendChild(printStyle);
+
+function show(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('c'+i).classList.toggle('hidden', i!==n);
+    document.getElementById('tab'+i).classList.toggle('active', i===n);
+  });
+}
+window.addEventListener('beforeprint', () => {
+  printStyle.textContent = '@page { size: 700px 400px; margin: 0; }';
+});
+</script>
+</body>
+</html>

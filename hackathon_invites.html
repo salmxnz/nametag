@@ -423,6 +423,449 @@
       width: auto;
     }
 
+    /* ══════ CHEQUE ══════ */
+    /*
+      Physical size: 70 cm × 40 cm + 0.5 cm bleed each side = 71 cm × 41 cm
+      Screen preview uses 1 cm = 10 px → 710 px × 410 px (bleed area visible)
+      The inner "safe" area is 700 px × 400 px
+    */
+    .cheque-wrap {
+      width: 710px;
+      height: 410px;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(23, 50, 77, 0.18);
+    }
+
+    .cheque-wrap.hidden { display: none; }
+
+    /* bleed box — full 71×41 cm */
+    .cheque {
+      width: 710px;
+      height: 410px;
+      background: #F7FBFF;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* bleed outline (screen only) */
+    .cheque::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 5px dashed rgba(255, 79, 147, 0.18);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* safe-area inset: 5 px bleed on each side */
+    .cheque-inner {
+      position: absolute;
+      inset: 5px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* top accent bar */
+    .cheque-bar {
+      height: 8px;
+      background: linear-gradient(90deg, #17324D 0%, #FF4F93 60%, #ff8cb8 100%);
+      flex-shrink: 0;
+    }
+
+    /* main content area */
+    .cheque-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 22px 36px 18px;
+      position: relative;
+    }
+
+    /* watermark */
+    .cheque-watermark {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0.04;
+    }
+
+    .cheque-watermark img {
+      width: 70%;
+      max-width: 420px;
+    }
+
+    /* row 1 — logo + event name */
+    .cheque-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .cheque-header-logo img {
+      height: 28px;
+      width: auto;
+    }
+
+    .cheque-event {
+      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: #17324D;
+      text-align: right;
+      line-height: 1.3;
+    }
+
+    .cheque-event span {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8AA0B4;
+    }
+
+    /* divider */
+    .cheque-hdivider {
+      width: 100%;
+      height: 1px;
+      background: #E8EEF5;
+      margin-bottom: 16px;
+      flex-shrink: 0;
+    }
+
+    /* pay row */
+    .cheque-pay-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .cheque-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8AA0B4;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cheque-line {
+      flex: 1;
+      border: none;
+      border-bottom: 1.5px solid #E8EEF5;
+      height: 22px;
+    }
+
+    .cheque-payee {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      color: #17324D;
+      line-height: 1;
+      flex: 1;
+    }
+
+    /* amount box */
+    .cheque-amount-box {
+      border: 2px solid #17324D;
+      border-radius: 8px;
+      padding: 6px 18px;
+      min-width: 180px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .cheque-amount-label {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8AA0B4;
+      margin-bottom: 2px;
+    }
+
+    .cheque-amount-value {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 22px;
+      color: #17324D;
+      letter-spacing: -0.5px;
+    }
+
+    /* words row */
+    .cheque-words-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .cheque-words {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4D6984;
+      flex: 1;
+      border-bottom: 1.5px solid #E8EEF5;
+      padding-bottom: 4px;
+    }
+
+    /* memo + sig row */
+    .cheque-bottom-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      margin-top: auto;
+    }
+
+    .cheque-memo {
+      flex: 1;
+    }
+
+    .cheque-sig {
+      flex: 0 0 220px;
+      text-align: center;
+    }
+
+    .cheque-sig-line {
+      border-bottom: 1.5px solid #17324D;
+      margin-bottom: 4px;
+      height: 28px;
+    }
+
+    .cheque-sig-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8AA0B4;
+    }
+
+    /* date chip */
+    .cheque-date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1.5px solid #E8EEF5;
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4D6984;
+      letter-spacing: 0.5px;
+    }
+
+    .cheque-date-chip::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #FF4F93;
+    }
+
+    /* bottom accent bar */
+    .cheque-footer-bar {
+      height: 5px;
+      background: linear-gradient(90deg, #ff8cb8 0%, #FF4F93 40%, #17324D 100%);
+      flex-shrink: 0;
+    }
+
+    /* ══════ TEAM FRAME ══════ */
+    .frame-wrap {
+      width: 1080px;
+      height: 1080px;
+      max-width: 92vw;
+      max-height: 92vw;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(23, 50, 77, 0.18);
+      overflow: hidden;
+      background: #000;
+    }
+
+    .frame-wrap.hidden { display: none; }
+
+    /* full bleed bg */
+    .frame-bg {
+      position: absolute;
+      inset: 0;
+      background: url('photos/bg.jpg') center/cover no-repeat;
+    }
+
+    /* dark overlay to keep text legible */
+    .frame-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(5, 0, 20, 0.72) 0%,
+        rgba(10, 0, 30, 0.55) 50%,
+        rgba(5, 0, 20, 0.80) 100%
+      );
+    }
+
+    /* top-left brand block */
+    .frame-brand {
+      position: absolute;
+      top: 48px;
+      left: 52px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .frame-brand-agentforce {
+      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.9);
+      line-height: 1;
+    }
+
+    .frame-brand img.hackathon-img {
+      height: 44px;
+      width: auto;
+      align-self: flex-start;
+    }
+
+    .frame-year-pill {
+      display: inline-flex;
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+      padding: 5px 16px;
+      color: rgba(255,255,255,0.75);
+      backdrop-filter: blur(6px);
+    }
+
+    /* center rectangle photo placeholder */
+    .frame-photo-area {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 624px;
+      border-left: none;
+      border-right: none;
+      border-top: 3px solid rgba(255,255,255,0.22);
+      border-bottom: 3px solid rgba(255,255,255,0.22);
+      border-radius: 0;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .frame-photo-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .frame-photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .frame-photo-placeholder svg {
+      opacity: 0.4;
+    }
+
+    .frame-photo-placeholder span {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* bottom-left team name */
+    .frame-team {
+      position: absolute;
+      bottom: 128px;
+      left: 52px;
+      z-index: 2;
+    }
+
+    .frame-team-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 8px;
+    }
+
+    .frame-team-name {
+      font-family: var(--serif);
+      font-size: 52px;
+      line-height: 1;
+      color: #fff;
+      letter-spacing: -1px;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    /* accent bar under team name */
+    .frame-team-bar {
+      width: 56px;
+      height: 4px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+      margin-top: 12px;
+    }
+
+    /* bottom sponsor strip */
+    .frame-sponsors {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      padding: 0 52px;
+      z-index: 3;
+    }
+
+    .frame-sponsors img {
+      height: 28px;
+      width: auto;
+      max-width: 110px;
+      object-fit: contain;
+      filter: grayscale(0.15);
+    }
+
+    .frame-sponsors .sep {
+      width: 1px;
+      height: 32px;
+      background: #e2eaf2;
+      flex-shrink: 0;
+    }
+
     /* ══════ PRINT ══════ */
     @media print {
       body {
@@ -445,6 +888,33 @@
         width: 680px !important;
         height: 680px !important;
         max-width: none !important;
+        margin: 0 !important;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* cheque: 71 cm × 41 cm (with bleed) */
+      .cheque-wrap:not(.hidden) {
+        box-shadow: none !important;
+        width: 710px !important;
+        height: 410px !important;
+        margin: 0 !important;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+
+      /* hide bleed dashes on print */
+      .cheque::before {
+        display: none !important;
+      }
+
+      /* team frame: square 1080×1080 */
+      .frame-wrap:not(.hidden) {
+        box-shadow: none !important;
+        width: 1080px !important;
+        height: 1080px !important;
+        max-width: none !important;
+        max-height: none !important;
         margin: 0 !important;
         page-break-after: avoid;
         page-break-inside: avoid;
@@ -473,6 +943,8 @@
     <button class="tab" id="tab3" onclick="showInvite(3)">Agenda Day 1</button>
     <button class="tab" id="tab4" onclick="showInvite(4)">Agenda Day 2</button>
     <button class="tab" id="tab5" onclick="showInvite(5)">Hackathon Day</button>
+    <button class="tab" id="tab6" onclick="showInvite(6)">Cheque</button>
+    <button class="tab" id="tab7" onclick="showInvite(7)">Team Frame</button>
     <button class="print-btn" onclick="window.print()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" stroke-linejoin="round">
@@ -685,18 +1157,148 @@
     </div>
   </div>
 
+  <!-- ════════ CHEQUE ════════ -->
+  <!--
+    Physical: 70 cm × 40 cm  |  With bleed: 71 cm × 41 cm
+    Screen scale: 1 cm = 10 px  →  710 px × 410 px
+  -->
+  <div class="cheque-wrap hidden" id="invite6">
+    <div class="cheque">
+      <div class="cheque-inner">
+
+        <div class="cheque-bar"></div>
+
+        <div class="cheque-body">
+
+          <!-- watermark -->
+          <div class="cheque-watermark">
+            <img src="photos/nexavenu-logo.png" alt="" />
+          </div>
+
+          <!-- header -->
+          <div class="cheque-header">
+            <div class="cheque-header-logo">
+              <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+            </div>
+            <div class="cheque-event">
+              Agentforce Hackathon
+              <span>Cheque · 2026</span>
+            </div>
+          </div>
+
+          <div class="cheque-hdivider"></div>
+
+          <!-- date -->
+          <div style="margin-bottom:14px;">
+            <span class="cheque-date-chip">18 June 2026</span>
+          </div>
+
+          <!-- Pay to the order of -->
+          <div class="cheque-pay-row">
+            <span class="cheque-label">Pay to the order of</span>
+            <div class="cheque-payee">_________________________________</div>
+            <div class="cheque-amount-box">
+              <div class="cheque-amount-label">Amount (Rs)</div>
+              <div class="cheque-amount-value">___________</div>
+            </div>
+          </div>
+
+          <!-- Words -->
+          <div class="cheque-words-row">
+            <span class="cheque-label">In words</span>
+            <div class="cheque-words">&nbsp;</div>
+            <span style="font-size:11px;font-weight:700;color:#8AA0B4;white-space:nowrap;">Rs &amp; cents</span>
+          </div>
+
+          <!-- Memo + Signature -->
+          <div class="cheque-bottom-row">
+            <div class="cheque-memo">
+              <div class="cheque-label" style="margin-bottom:6px;">Memo / For</div>
+              <div class="cheque-line"></div>
+              <div style="margin-top:10px;">
+                <div class="cheque-label" style="margin-bottom:4px;">Bank &amp; Account</div>
+                <div class="cheque-line"></div>
+              </div>
+            </div>
+            <div class="cheque-sig">
+              <div class="cheque-sig-line"></div>
+              <div class="cheque-sig-label">Authorised Signature</div>
+            </div>
+          </div>
+
+        </div><!-- /cheque-body -->
+
+        <div class="cheque-footer-bar"></div>
+
+      </div><!-- /cheque-inner -->
+    </div><!-- /cheque -->
+  </div>
+
+  <!-- ════════ TEAM FRAME ════════ -->
+  <div class="frame-wrap hidden" id="invite7">
+    <div class="frame-bg"></div>
+    <div class="frame-overlay"></div>
+
+    <!-- top-left brand -->
+    <div class="frame-brand">
+      <span class="frame-brand-agentforce">Agentforce</span>
+      <img class="hackathon-img" src="photos/hackathon.png" alt="Hackathon" />
+      <div class="frame-year-pill">18 June 2026 · University of Mauritius</div>
+    </div>
+
+    <!-- centre photo placeholder -->
+    <div class="frame-photo-area" id="framePhotoArea">
+      <div class="frame-photo-placeholder" id="framePhotoPlaceholder">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>Team Photo</span>
+      </div>
+    </div>
+
+    <!-- bottom-left team name -->
+    <div class="frame-team">
+      <div class="frame-team-name" id="frameTeamName">Team Name</div>
+      <div class="frame-team-bar"></div>
+    </div>
+
+    <!-- sponsor strip -->
+    <div class="frame-sponsors">
+      <img src="photos/nexavenu-logo.png" alt="Nexavenu" />
+      <img src="photos/doppler-ai.webp" alt="Doppler AI" />
+      <img src="photos/Emtel_Logo.png" alt="Emtel" style="height:42px;" />
+      <img src="photos/CC-logo.webp" alt="Computer Club" style="height:42px;" />
+      <img src="photos/su-logo-hovered.png" alt="Student Union" style="height:42px;" />
+      <img src="photos/uom-logo.png" alt="UoM" style="height:66px;" />
+    </div>
+  </div>
+
   <script>
     let printStyle = document.createElement('style');
     document.head.appendChild(printStyle);
 
     function showInvite(n) {
-      [1, 2, 3, 4, 5].forEach(i => {
+      [1, 2, 3, 4, 5, 6, 7].forEach(i => {
         document.getElementById('invite' + i).classList.toggle('hidden', n !== i);
         document.getElementById('tab' + i).classList.toggle('active', n === i);
       });
+      // show/hide uikit controls
+      document.getElementById('frameControls').style.display = n === 7 ? 'flex' : 'none';
     }
 
     globalThis.addEventListener('beforeprint', () => {
+      const frame = document.querySelector('.frame-wrap:not(.hidden)');
+      if (frame) {
+        printStyle.textContent = `@page { size: 1080px 1080px; margin: 0; }`;
+        return;
+      }
+      const cheque = document.querySelector('.cheque-wrap:not(.hidden)');
+      if (cheque) {
+        printStyle.textContent = `@page { size: 71cm 41cm; margin: 0; }`;
+        return;
+      }
       const agenda = document.querySelector('.agenda-card:not(.hidden)');
       if (agenda) {
         const h = Math.ceil(agenda.getBoundingClientRect().height);
@@ -705,7 +1307,41 @@
         printStyle.textContent = `@page { size: 680px 680px; margin: 0; }`;
       }
     });
+
+    // ── Team Frame controls ──
+    function frameSetTeam(val) {
+      document.getElementById('frameTeamName').textContent = val || 'Team Name';
+    }
+
+    function frameLoadPhoto(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const area = document.getElementById('framePhotoArea');
+      const placeholder = document.getElementById('framePhotoPlaceholder');
+      let img = area.querySelector('img.frame-user-photo');
+      if (!img) {
+        img = document.createElement('img');
+        img.className = 'frame-user-photo';
+        img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+        area.appendChild(img);
+      }
+      img.src = url;
+      placeholder.style.display = 'none';
+    }
   </script>
+
+  <!-- Frame controls (hidden until frame tab is shown) -->
+  <div id="frameControls" style="display:none;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;background:#fff;border:1px solid #e2eaf2;border-radius:20px;padding:14px 24px;box-shadow:0 8px 28px rgba(23,50,77,0.08);">
+    <span style="font-size:13px;font-weight:600;color:#4d6984;">Team Frame:</span>
+    <input id="teamNameInput" type="text" placeholder="Enter team name…"
+      oninput="frameSetTeam(this.value)"
+      style="border:1px solid #e2eaf2;border-radius:999px;padding:8px 18px;font-family:inherit;font-size:13px;font-weight:600;color:#17324d;outline:none;width:220px;" />
+    <label style="border:none;background:#f2f5f9;color:#4d6984;font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:999px;cursor:pointer;">
+      Upload Photo
+      <input type="file" accept="image/*" onchange="frameLoadPhoto(this)" style="display:none;" />
+    </label>
+  </div>
 </body>
 
 </html>
