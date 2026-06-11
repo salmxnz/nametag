@@ -158,13 +158,13 @@ app.get('/print-all', (_req, res) => {
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-@page{margin:0;size:227px 340px}
-html,body{width:227px;background:#000;overflow:hidden}
+@page{margin:0;size:60mm 90mm}
+html,body{width:60mm;background:#000;overflow:hidden;margin:0;padding:0}
 .card{
-  width:227px;height:340px;
+  width:60mm;height:90mm;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;
-  background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 55%),url('photos/bg.jpg') center/cover no-repeat;
+  background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 55%),url('photos/bg.jpg') center/cover no-repeat #000;
   page-break-after:always;break-after:page;
 }
 .lhole{width:14px;height:7px;border-radius:7px;position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:20;border:2px solid rgba(255,255,255,.12);background:rgba(0,0,0,.7)}
@@ -223,8 +223,8 @@ app.get('/api/export-all', async (_req, res) => {
       });
 
       const pdfBytes = await page.pdf({
-        width:  '227px',
-        height: '340px',
+        width:  '60mm',
+        height: '90mm',
         printBackground: true,
         timeout: 120000,
       });

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nexavenu Backdrop — 300 × 250 cm</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #b0b8c4;
+    font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 40px 20px 60px;
+  }
+
+  /* ── screen notes — hidden on print ── */
+  .note {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(23,50,77,0.55);
+    letter-spacing: 0.3px;
+    text-align: center;
+  }
+  .specs {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .spec-pill {
+    background: #fff;
+    border: 1px solid #dce6f0;
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #17324d;
+    white-space: nowrap;
+  }
+
+  /*
+    ══════════════════════════════════════════════
+    ACTUAL SIZE: 300 cm wide × 250 cm tall
+    All dimensions use cm so the layout is identical
+    on screen and in print. Screen preview uses a
+    CSS scale() transform so the same exact element
+    fits the viewport.
+    ══════════════════════════════════════════════
+  */
+
+  /* preview wrapper — gives layout space for the scaled backdrop */
+  .backdrop-stage {
+    width: 600px;     /* 1:5 scale of 3000mm */
+    height: 500px;    /* 1:5 scale of 2500mm */
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+  }
+
+  .backdrop-outer {
+    /* real print size, scaled down for preview */
+    width: 300cm;
+    height: 250cm;
+    transform: scale(0.0524);   /* 600px / 300cm. 1cm≈37.795px → 300cm=11338.6px → 600/11338.6 ≈ 0.0529. Use 0.0524 for slight padding. */
+    transform-origin: top left;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+  }
+
+  /* compute precise scale: 600px / (300 * 37.795275591px) = 0.05291 */
+  /* hand-tuned to 0.05291 below via calc */
+  .backdrop-outer {
+    transform: scale(calc(600 / (300 * 37.795275591)));
+  }
+
+  /* ── backdrop itself — gradient lives on a real element, not a pseudo ── */
+  .backdrop {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg,
+      #070d18  0%,
+      #0e1f30  10%,
+      #17324D  25%,
+      #2e1060  48%,
+      #7a1250  68%,
+      #c02860  82%,
+      #9050d8  100%
+    );
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* radial bloom for centre lift */
+  .bloom {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 70% at 50% 50%,
+      rgba(255,255,255,0.08) 0%,
+      transparent 70%);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── scale badge — screen only ── */
+  .scale-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.35);
+    color: rgba(255,255,255,0.7);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  /*
+    ── step-and-repeat logo grid ──
+    Logo 40cm wide. Column pitch 65cm (40 logo + 25 gap).
+    Row pitch ~42cm vertical.
+    Even rows are shifted left by half a column (-32.5cm)
+    Odd rows shifted right by half a column (+32.5cm)
+    so the brick pattern bleeds off both edges and covers
+    top/bottom fully. Extra logos per row so nothing clips short.
+  */
+  .logo-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25cm;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* irregular shifts per row — no two adjacent rows align in the same column */
+  .logo-row.shift-a { transform: translateX(-45cm); }
+  .logo-row.shift-b { transform: translateX( 18cm); }
+  .logo-row.shift-c { transform: translateX(-22cm); }
+  .logo-row.shift-d { transform: translateX( 38cm); }
+  .logo-row.shift-e { transform: translateX(  -8cm); }
+  .logo-row.shift-f { transform: translateX( 50cm); }
+  .logo-row.shift-g { transform: translateX(-35cm); }
+
+  .logo-row img {
+    width: 40cm;
+    height: auto;
+    filter: brightness(0) invert(1); /* white version */
+    opacity: 0.95;
+    display: block;
+    flex-shrink: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    @page {
+      size: 300cm 250cm;
+      margin: 0;
+    }
+    html, body {
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: block !important;
+      min-height: unset !important;
+      width: 300cm !important;
+      height: 250cm !important;
+    }
+    .note, .specs, .scale-badge { display: none !important; }
+    .backdrop-stage {
+      width: 300cm !important;
+      height: 250cm !important;
+      box-shadow: none !important;
+    }
+    .backdrop-outer {
+      transform: none !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 300cm !important;
+      height: 250cm !important;
+    }
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="note">Backdrop preview · 1:5 scale (real layout, scaled for screen)</div>
+
+<div class="specs">
+  <span class="spec-pill">300 × 250 cm</span>
+  <span class="spec-pill">Textile print</span>
+  <span class="spec-pill">Velcro attachment</span>
+  <span class="spec-pill">Min. 100 DPI at actual size</span>
+  <span class="spec-pill">10 mm bleed all sides</span>
+</div>
+
+<div class="backdrop-stage">
+  <div class="scale-badge">1:5 preview</div>
+  <div class="backdrop-outer">
+    <div class="backdrop">
+      <div class="bloom"></div>
+      <div class="logo-grid">
+        <div class="logo-row shift-a">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+        <div class="logo-row shift-b">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+        <div class="logo-row shift-c">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+        <div class="logo-row shift-d">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+        <div class="logo-row shift-e">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+        <div class="logo-row shift-f">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+        <div class="logo-row shift-g">
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  To send to supplier: Print → Save as PDF · Set paper to Custom 300 × 250 cm
+  <br/>Ask supplier to add 10 mm bleed if not already included
+</div>
+
+</body>
+</html>
