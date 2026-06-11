@@ -131,7 +131,7 @@ app.get('/print-all', (_req, res) => {
         <span class="tsf">Agentforce</span>
         <img src="photos/hackathon.png" class="thack-img" alt="HACKATHON">
       </div>
-      <div style="flex:0.4"></div>
+      <div style="flex:0.75"></div>
       <div class="chackers">
         <div class="cident">
           <div class="pname" style="font-size:${nameSize(p.name.length)}">${p.name}</div>
@@ -168,7 +168,7 @@ html,body{width:60mm;background:#000;overflow:hidden;margin:0;padding:0}
   page-break-after:always;break-after:page;
 }
 .lhole{width:14px;height:7px;border-radius:7px;position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:20;border:2px solid rgba(255,255,255,.12);background:rgba(0,0,0,.7)}
-.ctop{padding:36px 14px 0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;background:transparent}
+.ctop{padding:38px 14px 0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;background:transparent}
 .nxlogo{height:10px;width:auto;filter:grayscale(1) brightness(6);opacity:.85}
 .cspacer{flex:1}
 .ctitle{padding:0 11px 0;text-align:center;flex-shrink:0;position:relative;z-index:2}
