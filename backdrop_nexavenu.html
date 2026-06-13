@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nexavenu Backdrop — 300 × 250 cm</title>
+<title>Nexavenu Backdrop — 300 × 225 cm</title>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -47,7 +47,7 @@
 
   /*
     ══════════════════════════════════════════════
-    ACTUAL SIZE: 300 cm wide × 250 cm tall
+    ACTUAL SIZE: 300 cm wide × 225 cm tall
     All dimensions use cm so the layout is identical
     on screen and in print. Screen preview uses a
     CSS scale() transform so the same exact element
@@ -58,7 +58,7 @@
   /* preview wrapper — gives layout space for the scaled backdrop */
   .backdrop-stage {
     width: 600px;     /* 1:5 scale of 3000mm */
-    height: 500px;    /* 1:5 scale of 2500mm */
+    height: 450px;    /* 1:5 scale of 2250mm */
     position: relative;
     box-shadow: 0 30px 80px rgba(0,0,0,0.35);
   }
@@ -66,19 +66,13 @@
   .backdrop-outer {
     /* real print size, scaled down for preview */
     width: 300cm;
-    height: 250cm;
-    transform: scale(0.0524);   /* 600px / 300cm. 1cm≈37.795px → 300cm=11338.6px → 600/11338.6 ≈ 0.0529. Use 0.0524 for slight padding. */
+    height: 225cm;
+    transform: scale(calc(600 / (300 * 37.795275591)));
     transform-origin: top left;
     position: absolute;
     top: 0;
     left: 0;
     overflow: hidden;
-  }
-
-  /* compute precise scale: 600px / (300 * 37.795275591px) = 0.05291 */
-  /* hand-tuned to 0.05291 below via calc */
-  .backdrop-outer {
-    transform: scale(calc(600 / (300 * 37.795275591)));
   }
 
   /* ── backdrop itself — gradient lives on a real element, not a pseudo ── */
@@ -87,14 +81,13 @@
     height: 100%;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg,
-      #070d18  0%,
-      #0e1f30  10%,
-      #17324D  25%,
-      #2e1060  48%,
-      #7a1250  68%,
-      #c02860  82%,
-      #9050d8  100%
+    background: linear-gradient(90deg,
+      #892F85   0%,
+      #8F378B  18%,
+      #913F92  35%,
+      #6E5A95  55%,
+      #4A94B6  78%,
+      #408498 100%
     );
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -130,13 +123,18 @@
 
   /*
     ── step-and-repeat logo grid ──
-    Logo 40cm wide. Column pitch 65cm (40 logo + 25 gap).
-    Row pitch ~42cm vertical.
-    Even rows are shifted left by half a column (-32.5cm)
-    Odd rows shifted right by half a column (+32.5cm)
-    so the brick pattern bleeds off both edges and covers
-    top/bottom fully. Extra logos per row so nothing clips short.
+    Sizes are controlled by CSS variables below for easy tweaking:
+      --nex-logo-width  : nexavenu wordmark width
+      --dodo-logo-width : dodo logo width (independent control)
+      --logo-gap        : horizontal gap between logos in a row
+    Rows use irregular per-row x-shifts so no two adjacent rows align.
   */
+  :root {
+    --nex-logo-width: 40cm;
+    --dodo-logo-width: 12cm; /* tweak this any time */
+    --logo-gap: 18cm;
+  }
+
   .logo-grid {
     position: absolute;
     inset: 0;
@@ -153,22 +151,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25cm;
+    gap: var(--logo-gap);
     flex-shrink: 0;
     white-space: nowrap;
   }
 
   /* irregular shifts per row — no two adjacent rows align in the same column */
-  .logo-row.shift-a { transform: translateX(-45cm); }
-  .logo-row.shift-b { transform: translateX( 18cm); }
-  .logo-row.shift-c { transform: translateX(-22cm); }
-  .logo-row.shift-d { transform: translateX( 38cm); }
-  .logo-row.shift-e { transform: translateX(  -8cm); }
-  .logo-row.shift-f { transform: translateX( 50cm); }
-  .logo-row.shift-g { transform: translateX(-35cm); }
+  .logo-row.shift-a { transform: translateX(-55cm); }
+  .logo-row.shift-b { transform: translateX( 22cm); }
+  .logo-row.shift-c { transform: translateX(-28cm); }
+  .logo-row.shift-d { transform: translateX( 45cm); }
+  .logo-row.shift-e { transform: translateX(-12cm); }
+  .logo-row.shift-f { transform: translateX( 60cm); }
+  .logo-row.shift-g { transform: translateX(-40cm); }
 
   .logo-row img {
-    width: 40cm;
     height: auto;
     filter: brightness(0) invert(1); /* white version */
     opacity: 0.95;
@@ -177,11 +174,13 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+  .logo-row img.nex  { width: var(--nex-logo-width); }
+  .logo-row img.dodo { width: var(--dodo-logo-width); }
 
   /* ── PRINT ── */
   @media print {
     @page {
-      size: 300cm 250cm;
+      size: 300cm 225cm;
       margin: 0;
     }
     html, body {
@@ -191,12 +190,12 @@
       display: block !important;
       min-height: unset !important;
       width: 300cm !important;
-      height: 250cm !important;
+      height: 225cm !important;
     }
     .note, .specs, .scale-badge { display: none !important; }
     .backdrop-stage {
       width: 300cm !important;
-      height: 250cm !important;
+      height: 225cm !important;
       box-shadow: none !important;
     }
     .backdrop-outer {
@@ -205,7 +204,7 @@
       top: 0 !important;
       left: 0 !important;
       width: 300cm !important;
-      height: 250cm !important;
+      height: 225cm !important;
     }
     * {
       -webkit-print-color-adjust: exact !important;
@@ -220,7 +219,7 @@
 <div class="note">Backdrop preview · 1:5 scale (real layout, scaled for screen)</div>
 
 <div class="specs">
-  <span class="spec-pill">300 × 250 cm</span>
+  <span class="spec-pill">300 × 225 cm</span>
   <span class="spec-pill">Textile print</span>
   <span class="spec-pill">Velcro attachment</span>
   <span class="spec-pill">Min. 100 DPI at actual size</span>
@@ -234,67 +233,81 @@
       <div class="bloom"></div>
       <div class="logo-grid">
         <div class="logo-row shift-a">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
         </div>
         <div class="logo-row shift-b">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
         </div>
         <div class="logo-row shift-c">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
         </div>
         <div class="logo-row shift-d">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
         </div>
         <div class="logo-row shift-e">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
         </div>
         <div class="logo-row shift-f">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
         </div>
         <div class="logo-row shift-g">
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
-          <img src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
+          <img class="nex"  src="photos/nexavenu-logo.png" alt="Nexavenu"/>
+          <img class="dodo" src="photos/dodo-logo.png"     alt="Dodo"/>
         </div>
       </div>
     </div>
@@ -302,7 +315,7 @@
 </div>
 
 <div class="note">
-  To send to supplier: Print → Save as PDF · Set paper to Custom 300 × 250 cm
+  To send to supplier: Print → Save as PDF · Set paper to Custom 300 × 225 cm
   <br/>Ask supplier to add 10 mm bleed if not already included
 </div>
 

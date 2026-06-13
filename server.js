@@ -7,9 +7,12 @@ const puppeteer  = require('puppeteer-core');
 const { PDFDocument } = require('pdf-lib');
 
 const app  = express();
-// export-all can take 2–3 min on first run — keep the socket alive
+// export-all with 95 nametags can take several minutes — keep the socket alive
 app.use((req, res, next) => {
-  if (req.path === '/api/export-all') res.setTimeout(300000);
+  if (req.path === '/api/export-all') {
+    res.setTimeout(600000);
+    req.setTimeout(600000);
+  }
   next();
 });
 const DB   = path.join(__dirname, 'data', 'db.json');
@@ -216,17 +219,32 @@ app.get('/api/export-all', async (_req, res) => {
     });
     try {
       const page = await browser.newPage();
+      page.setDefaultTimeout(600000);
       // use 127.0.0.1 to avoid DNS resolution issues inside the container
       await page.goto(`http://127.0.0.1:${PORT_}/print-all`, {
-        waitUntil: 'networkidle0',
-        timeout: 120000,
+        waitUntil: 'domcontentloaded',
+        timeout: 600000,
+      });
+
+      // wait for every <img> to actually finish loading (decode included)
+      await page.evaluate(async () => {
+        const imgs = [...document.images];
+        await Promise.all(imgs.map(im => {
+          if (im.complete && im.naturalWidth) return;
+          return new Promise(res => {
+            im.addEventListener('load', res, { once: true });
+            im.addEventListener('error', res, { once: true });
+          });
+        }));
+        // also wait for fonts
+        if (document.fonts && document.fonts.ready) await document.fonts.ready;
       });
 
       const pdfBytes = await page.pdf({
         width:  '60mm',
         height: '90mm',
         printBackground: true,
-        timeout: 120000,
+        timeout: 600000,
       });
 
       res.setHeader('Content-Type', 'application/pdf');
