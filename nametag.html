@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Frame — Agentforce Hackathon 2026</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=DM+Serif+Display:ital@0;1&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #17324d;
+      --pink: #ff4f93;
+      --purple: #7440c8;
+      --font: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+      --serif: 'DM Serif Display', Georgia, serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background: #eef2f7;
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* ── toolbar ── */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #e2eaf2;
+      border-radius: 999px;
+      padding: 8px 8px 8px 20px;
+      box-shadow: 0 8px 28px rgba(23, 50, 77, 0.08);
+    }
+
+    .toolbar span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink2);
+      margin-right: 6px;
+    }
+
+    .print-btn {
+      border: none;
+      background: var(--pink);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(255, 79, 147, 0.32);
+      transition: all .2s;
+    }
+
+    .print-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px rgba(255, 79, 147, 0.42);
+    }
+
+    /* ── nametag ── */
+    .nametag-wrap {
+      width: 15cm;
+      height: 10cm;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(23, 50, 77, 0.18);
+      overflow: hidden;
+      background: #000;
+    }
+
+    .nametag-bg {
+      position: absolute;
+      inset: 0;
+      background: url('photos/bg.jpg') center/cover no-repeat;
+    }
+
+    .nametag-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(5, 0, 20, 0.72) 0%,
+        rgba(10, 0, 30, 0.55) 50%,
+        rgba(5, 0, 20, 0.80) 100%
+      );
+    }
+
+    /* ── content sections ── */
+    .nametag-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2cm 1.5cm;
+      z-index: 2;
+    }
+
+    .nametag-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nametag-title {
+      font-family: 'Arial Black', 'Arial Bold', Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: rgba(255, 255, 255, 0.95);
+      line-height: 1;
+      text-align: center;
+    }
+
+    /* ── hollow middle ── */
+    .nametag-hollow {
+      width: 7cm;
+      height: 3.5cm;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(2px);
+    }
+
+    .nametag-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nametag-bottom img {
+      height: 1.2cm;
+      width: auto;
+    }
+
+    /* ── print ── */
+    @media print {
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+
+      .toolbar {
+        display: none !important;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .nametag-wrap {
+        box-shadow: none !important;
+        width: 15cm !important;
+        height: 10cm !important;
+        margin: 0 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="toolbar">
+    <span>Nametag</span>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9" />
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+        <rect x="6" y="14" width="12" height="8" />
+      </svg>
+      Print / Save as PDF
+    </button>
+  </div>
+
+  <div class="nametag-wrap">
+    <div class="nametag-bg"></div>
+    <div class="nametag-overlay"></div>
+
+    <div class="nametag-content">
+      <div class="nametag-top">
+        <span class="nametag-title">Agentforce</span>
+      </div>
+
+      <div class="nametag-hollow"></div>
+
+      <div class="nametag-bottom">
+        <img src="photos/hackathon.png" alt="Hackathon" />
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

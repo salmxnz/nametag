@@ -296,10 +296,10 @@ body{
     print-color-adjust:exact!important;
     color-adjust:exact!important;
   }
-  /* page = trim + 3mm bleed all sides */
-  @page{margin:0;size:60mm 90mm}
+  /* trim 60×90mm + 10mm (1cm) bleed all sides = page 80×110mm */
+  @page{margin:0;size:80mm 110mm}
   html,body{
-    width:60mm!important;height:90mm!important;
+    width:80mm!important;height:110mm!important;
     overflow:hidden!important;
     padding:0!important;margin:0!important;
     display:block!important;min-height:0!important;
@@ -309,14 +309,14 @@ body{
   .stage{
     display:block!important;
     padding:0!important;margin:0!important;
-    width:60mm!important;height:90mm!important;
+    width:80mm!important;height:110mm!important;
     overflow:hidden!important;
   }
-  /* card fills the full bleed page — bg bleeds to all edges */
+  /* card expands to fill full bleed page */
   .card{
     animation:none!important;transform:none!important;
     box-shadow:none!important;border-radius:0!important;
-    width:60mm!important;height:90mm!important;
+    width:80mm!important;height:110mm!important;
     position:static!important;
   }
   .logo-ring{
