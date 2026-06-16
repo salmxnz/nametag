@@ -141,8 +141,8 @@ app.get('/print-all', (_req, res) => {
           <div class="porg">${teamName}</div>
           <div class="logo-ring">${logoHtml}</div>
         </div>
-        <img class="himg hleft"  src="photos/hacket-left.png" alt="">
-        <img class="himg hright" src="photos/hacker-right.png" alt="">
+        <img class="himg hleft"  src="photos/hacket-left.webp" alt="">
+        <img class="himg hright" src="photos/hacker-right.webp" alt="">
       </div>
       <div class="cfooter">
         <img src="photos/doppler-ai.webp"            class="fl" alt="Doppler AI">
@@ -161,17 +161,18 @@ app.get('/print-all', (_req, res) => {
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-@page{margin:0;size:60mm 90mm}
-html,body{width:60mm;background:#000;overflow:hidden;margin:0;padding:0}
+/* trim 60×90mm + 10mm (1cm) bleed all sides = page 80×110mm */
+@page{margin:0;size:80mm 110mm}
+html,body{width:80mm;background:#000;overflow:hidden;margin:0;padding:0}
 .card{
-  width:60mm;height:90mm;
+  width:80mm;height:110mm;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;
   background:linear-gradient(to bottom,rgba(0,0,0,.72) 0%,rgba(0,0,0,0) 55%),url('photos/bg.jpg') center/cover no-repeat #000;
   page-break-after:always;break-after:page;
 }
 .lhole{width:14px;height:7px;border-radius:7px;position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:20;border:2px solid rgba(255,255,255,.12);background:rgba(0,0,0,.7)}
-.ctop{padding:38px 14px 0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;background:transparent}
+.ctop{padding:16mm 14px 0;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:2;background:transparent}
 .nxlogo{height:10px;width:auto;filter:grayscale(1) brightness(6);opacity:.85}
 .cspacer{flex:1}
 .ctitle{padding:0 11px 0;text-align:center;flex-shrink:0;position:relative;z-index:2}
@@ -189,7 +190,7 @@ html,body{width:60mm;background:#000;overflow:hidden;margin:0;padding:0}
 .logo-img{width:100%;height:100%;object-fit:contain;padding:4px}
 .logo-photo{object-fit:cover;padding:0}
 .logo-init{font-family:'Orbitron',monospace;font-size:12px;font-weight:900;letter-spacing:1px;text-align:center;color:#a78bfa}
-.cfooter{height:50px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0;flex-shrink:0;position:relative;z-index:2;background:#fff;border-top:none}
+.cfooter{height:23mm;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 0 10mm;flex-shrink:0;position:relative;z-index:2;background:#fff;border-top:none}
 .fl{height:20px;width:auto;max-width:32px;object-fit:contain}
 </style>
 </head><body>${cards}</body></html>`);
@@ -241,8 +242,8 @@ app.get('/api/export-all', async (_req, res) => {
       });
 
       const pdfBytes = await page.pdf({
-        width:  '60mm',
-        height: '90mm',
+        width:  '80mm',
+        height: '110mm',
         printBackground: true,
         timeout: 600000,
       });
