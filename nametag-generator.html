@@ -325,6 +325,21 @@ body{
   }
   .pname{text-shadow:none!important}
   .porg{text-shadow:none!important}
+
+  /* ── BLEED SAFE-ZONE (top + bottom) ──────────────
+     bg bleeds to page edges, but content stays clear
+     of the 10mm trim line so nothing gets cut. */
+
+  /* push nexavenu logo below trim into safe zone */
+  .ctop{padding-top:16mm!important}
+
+  /* white footer band bleeds off bottom edge,
+     logos pushed up above the trim line */
+  .cfooter{
+    height:23mm!important;
+    padding:0 0 10mm!important;
+    align-items:center!important;
+  }
 }
 </style>
 </head>
